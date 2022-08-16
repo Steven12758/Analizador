@@ -20,28 +20,28 @@ ACENTO = [ñÑáéíóúÁÉÍÓÚ]
 ("\(\*" ~"\*\)" | "\(\*" "\*"+ "\)") {/*No se procesa*/} // comentario multilínea
 ("{" ~"}" | "{" "}") {/*No se procesa*/} // comentario multilínea
 
-"<<EOF>>" {return OPERADOR;}
+"<<EOF>>" {lexeme=yytext(); return OPERADOR;}
 "//".* {/*Ignore*/}
-"=" {return OPERADOR_IGUAL;}
-"+" {return OPERADOR_ADICION;}
-"-" {return OPERADOR_SUSTRACCION;}
-"*" {return OPERADOR_MULTIPLICACION;}
-"/" {return OPERADOR_DIVISION;}
-";" {return TERMINADOR;}
-"," {return OPERADOR_COMA;}
-"++" {return OPERADOR_INCREMENTO;}
-"--" {return OPERADOR_DISMINUCION;}
-">=" {return OPERADOR_MAYOR_IGUAL_QUE;}
-">" {return OPERADOR_MAYOR_QUE;}
-"<=" {return OPERADOR_MENOR_IGUAL_QUE;}
-"<" {return OPERADOR_MENOR_QUE;}
-"<>" {return OPERADOR_DIFERENTE_DE;}
-"(" {return OPERADOR_PARENTESIS_ABRIR;}
-")" {return OPERADOR_PARENTESIS_CERRAR;}
-"[" {return OPERADOR_CORCHETE_ABRIR;}
-"]" {return OPERADOR_CORCHETE_CERRAR;}
-"." {return OPERADOR_PUNTO;}
-":" {return OPERADOR_DOS_PUNTOS;}
+"=" {lexeme=yytext(); return OPERADOR_IGUAL;}
+"+" {lexeme=yytext(); return OPERADOR_ADICION;}
+"-" {lexeme=yytext(); return OPERADOR_SUSTRACCION;}
+"*" {lexeme=yytext(); return OPERADOR_MULTIPLICACION;}
+"/" {lexeme=yytext(); return OPERADOR_DIVISION;}
+";" {lexeme=yytext(); return TERMINADOR;}
+"," {lexeme=yytext(); return OPERADOR_COMA;}
+"++" {lexeme=yytext(); return OPERADOR_INCREMENTO;}
+"--" {lexeme=yytext(); return OPERADOR_DISMINUCION;}
+">=" {lexeme=yytext(); return OPERADOR_MAYOR_IGUAL_QUE;}
+">" {lexeme=yytext(); return OPERADOR_MAYOR_QUE;}
+"<=" {lexeme=yytext(); return OPERADOR_MENOR_IGUAL_QUE;}
+"<" {lexeme=yytext(); return OPERADOR_MENOR_QUE;}
+"<>" {lexeme=yytext(); return OPERADOR_DIFERENTE_DE;}
+"(" {lexeme=yytext(); return OPERADOR_PARENTESIS_ABRIR;}
+")" {lexeme=yytext(); return OPERADOR_PARENTESIS_CERRAR;}
+"[" {lexeme=yytext(); return OPERADOR_CORCHETE_ABRIR;}
+"]" {lexeme=yytext(); return OPERADOR_CORCHETE_CERRAR;}
+"." {lexeme=yytext(); return OPERADOR_PUNTO;}
+":" {lexeme=yytext(); return OPERADOR_DOS_PUNTOS;}
 abstract | 
 assert | 
 boolean | 
@@ -98,7 +98,7 @@ var |
 const | 
 goto | 
 String |
-while {return PALABRA_RESERVADA;}
+while {lexeme=yytext(); return PALABRA_RESERVADA;}
 
 
 // |-------------------- RECONOCER EXPRESIONES --------------------| //

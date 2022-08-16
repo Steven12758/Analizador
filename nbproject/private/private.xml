@@ -3,9 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/root/NetBeansProjects/Analizador/src/lexico/Token.java</file>
-            <file>file:/root/NetBeansProjects/Analizador/src/analizador/Analizador.java</file>
-            <file>file:/root/NetBeansProjects/Analizador/src/lexico/Lexer.flex</file>
+            <file>file:/home/thend/Documentos/Analizador/src/sintactico/Syntax.java</file>
+            <file>file:/home/thend/Documentos/Analizador/src/sintactico/Syntax.cup</file>
+            <file>file:/home/thend/Documentos/Analizador/src/sintactico/GUI_Sintactico.java</file>
         </group>
     </open-files>
 </project-private>

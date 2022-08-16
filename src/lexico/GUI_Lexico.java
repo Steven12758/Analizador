@@ -13,8 +13,6 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static lexico.Tokens.OPERADOR_MAYOR_IGUAL_QUE;
-import static lexico.Tokens.OPERADOR_MENOR_IGUAL_QUE;
 
 /**
  *
@@ -124,7 +122,7 @@ public class GUI_Lexico extends javax.swing.JFrame {
                         resultado += lexer.lexeme + ": Es un " + tokens + "\n";
                         break;
                     default:
-                        resultado += "Token: " + tokens + "\n";
+                        resultado += lexer.lexeme + ": Token | " + tokens + "\n";
                         break;
                 }
             }
