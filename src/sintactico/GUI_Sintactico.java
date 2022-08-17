@@ -29,7 +29,7 @@ public class GUI_Sintactico extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
     }
 
-    private void analizarLexico() throws IOException{
+    private void analizarLexico() throws IOException {
         int cont = 1;
         String expr = (String) txtResultado.getText();
         Lexer lexer = new Lexer(new StringReader(expr));
@@ -89,10 +89,10 @@ public class GUI_Sintactico extends javax.swing.JFrame {
                 case OPERADOR_RELACIONAL:
                     resultado += "  <Operador relacional>\t" + lexer.lexeme + "\n";
                     break;
-                case OPERADOR_ASIGNACION_ADICION: 
+                case OPERADOR_ASIGNACION_ADICION:
                 case OPERADOR_ASIGNACION_SUSTRACCION:
                 case OPERADOR_ASIGNACION_MULTIPLICACION:
-                case OPERADOR_ASIGNACION_DIVISION:                    
+                case OPERADOR_ASIGNACION_DIVISION:
                     resultado += "  <Operador atribucion>\t" + lexer.lexeme + "\n";
                     break;
                 case OPERADOR_BOOLEANO:
@@ -137,6 +137,7 @@ public class GUI_Sintactico extends javax.swing.JFrame {
             }
         }
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -264,11 +265,9 @@ public class GUI_Sintactico extends javax.swing.JFrame {
 
     private void btnArchivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnArchivoActionPerformed
         // TODO add your handling code here:
-        
         JFileChooser chooser = new JFileChooser();
         chooser.showOpenDialog(null);
         File archivo = new File(chooser.getSelectedFile().getAbsolutePath());
-
         try {
             String ST = new String(Files.readAllBytes(archivo.toPath()));
             txtResultado.setText(ST);
@@ -280,8 +279,7 @@ public class GUI_Sintactico extends javax.swing.JFrame {
     }//GEN-LAST:event_btnArchivoActionPerformed
 
     private void btnAnalizarLexActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizarLexActionPerformed
-        
-         try {
+        try {
             analizarLexico();
         } catch (IOException ex) {
             Logger.getLogger(GUI_Sintactico.class.getName()).log(Level.SEVERE, null, ex);
@@ -296,11 +294,9 @@ public class GUI_Sintactico extends javax.swing.JFrame {
     private void btnAnalizarSinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizarSinActionPerformed
         // TODO add your handling code here:
         String ST = txtResultado.getText();
-        System.out.println(ST);
         Syntax s = new Syntax(new LexerCup(new StringReader(ST)));
         try {
             s.parse();
-            System.out.println(s);
             txtAnalizarSin.setText("Analisis realizado correctamente");
             txtAnalizarSin.setForeground(new Color(25, 111, 61));
         } catch (Exception ex) {
