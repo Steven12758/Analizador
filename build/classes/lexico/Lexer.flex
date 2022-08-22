@@ -3,151 +3,125 @@ import static lexico.Tokens.*;
 %%
 %class Lexer
 %type Tokens
+L=[a-zA-Z_]+
+D=[0-9]+
+espacio=[ ,\t,\r]+
 %{
-public String lexeme;
+    public String lexeme;
 %}
-// LENGUAGE: JAVA
-LETRA = [a-zA-Z_]
-DIGITO = [0-9]
-ESPACIO = [ \t \r \n \f \r\n]
-SIMBOLO = [#!$%&?¡_]
-OPERADOR = ","|";"|"++"|"--"|">="|">"|"<="|"<"|"<>"|"="|"+"|"-"|"*"|"/"|"("|")"|"["|"]"|":="|"."|":"|"+="|"-="|"*="|"/="|">>"|"<<"|"<<="|">>="
-ACENTO = [ñÑáéíóúÁÉÍÓÚ]
 %%
 
-{ESPACIO} {/*No se procesa*/} // espacio en blanco
-"//".* {/*No se procesa*/} // dos slash de comentario
-("\(\*" ~"\*\)" | "\(\*" "\*"+ "\)") {/*No se procesa*/} // comentario multilínea
-("{" ~"}" | "{" "}") {/*No se procesa*/} // comentario multilínea
+/* Espacios en blanco */
+{espacio} {/*Ignore*/}
 
-"<<EOF>>" {lexeme=yytext(); return OPERADOR;}
-"//".* {/*Ignore*/}
-"=" {lexeme=yytext(); return OPERADOR_IGUAL;}
-"+" {lexeme=yytext(); return OPERADOR_ADICION;}
-"-" {lexeme=yytext(); return OPERADOR_SUSTRACCION;}
-"*" {lexeme=yytext(); return OPERADOR_MULTIPLICACION;}
-"/" {lexeme=yytext(); return OPERADOR_DIVISION;}
-";" {lexeme=yytext(); return TERMINADOR;}
-"," {lexeme=yytext(); return OPERADOR_COMA;}
-"++" {lexeme=yytext(); return OPERADOR_INCREMENTO;}
-"--" {lexeme=yytext(); return OPERADOR_DISMINUCION;}
-">=" {lexeme=yytext(); return OPERADOR_MAYOR_IGUAL_QUE;}
-">" {lexeme=yytext(); return OPERADOR_MAYOR_QUE;}
-"<=" {lexeme=yytext(); return OPERADOR_MENOR_IGUAL_QUE;}
-"<" {lexeme=yytext(); return OPERADOR_MENOR_QUE;}
-"<>" {lexeme=yytext(); return OPERADOR_DIFERENTE_DE;}
-"(" {lexeme=yytext(); return OPERADOR_PARENTESIS_ABRIR;}
-")" {lexeme=yytext(); return OPERADOR_PARENTESIS_CERRAR;}
-"[" {lexeme=yytext(); return OPERADOR_CORCHETE_ABRIR;}
-"]" {lexeme=yytext(); return OPERADOR_CORCHETE_CERRAR;}
-"." {lexeme=yytext(); return OPERADOR_PUNTO;}
-":" {lexeme=yytext(); return OPERADOR_DOS_PUNTOS;}
-abstract | 
-assert | 
-boolean | 
-boolean | 
-byte | 
-case | 
-catch | 
-char | 
-class | 
-continue | 
-default | 
-do | 
-double | 
-else | 
-exports | 
-extends | 
-false | 
-final | 
-finally | 
-float | 
-for | 
-if | 
-implements | 
-import | 
-instanceof | 
-int | 
-interface | 
-long | 
-module | 
-native | 
-new | 
-package | 
-private | 
-protected | 
-public | 
-requires | 
-return | 
-short | 
-static | 
-super | 
-switch | 
-syncronized | 
-this | 
-throw | 
-throws | 
-transient | 
-try | 
-true | 
-void | 
-volatile | 
-while | 
-null | 
-var | 
-const | 
-goto | 
-String |
-while {lexeme=yytext(); return PALABRA_RESERVADA;}
+/* Comentarios */
+( "//"(.)* ) {/*Ignore*/}
 
+/* Salto de linea */
+( "\n" ) {return Linea;}
 
-// |-------------------- RECONOCER EXPRESIONES --------------------| //
-// Identificadores
-{LETRA}({LETRA}|{DIGITO})* {lexeme=yytext(); return IDENTIFICADOR;}
+/* Comillas */
+( "\"" ) {lexeme=yytext(); return Comillas;}
 
-// Flotantes
-(({DIGITO}+"."{DIGITO}+)) |
-    (({DIGITO}"."{DIGITO}+)([eE][-]?{DIGITO}+)) {lexeme=yytext(); return LITERAL_NUM_FLOTANTE;}
+/* Tipos de datos numericos */
+( byte | int | char | long | float | double ) {lexeme=yytext(); return T_dato;}
 
-// Literales
-((\"[^\"] ~\")|(\"\")) {lexeme=yytext(); return LITERAL_STRING;}
-("#"{DIGITO}+) {lexeme=yytext(); return LITERAL_STRING;}
-("(-"{DIGITO}+")")|{DIGITO}+ {lexeme=yytext(); return LITERAL_NUM_ENTERO;}
+/* Tipo de dato String */
+( String ) {lexeme=yytext(); return Cadena;}
 
+/* Palabra reservada If */
+( if ) {lexeme=yytext(); return If;}
 
-// |-------------------- RECONOCER ERRORES --------------------| //
-// Identificadores
-//identificador mayor a 127 caracteres
-{LETRA}(({LETRA}|{DIGITO}){127})({LETRA}|{DIGITO})* {lexeme=yytext(); return ERROR_IDENTIFICADOR;}
-//identificador no comienza con digito
-(({DIGITO}+)({LETRA}|{ACENTO}))(({LETRA}|{DIGITO}|{SIMBOLO}|{ACENTO}))* {lexeme=yytext(); return ERROR_IDENTIFICADOR;}
-//identificador no lleva simbolos
-({LETRA}|{ACENTO}|{SIMBOLO})(({LETRA}|{DIGITO}|{SIMBOLO}|{ACENTO}))+ {lexeme=yytext(); return ERROR_IDENTIFICADOR;}
+/* Palabra reservada Else */
+( else ) {lexeme=yytext(); return Else;}
 
-// Flotantes
-// 12.12.12...
-{DIGITO}+"."{DIGITO}+("."{DIGITO}*)+ {lexeme=yytext(); return ERROR_LITERAL;}
-// .12e12 / .12e / .12  | 12.23e-23.12
-("."{DIGITO}+([eE][-]?{DIGITO}*)?) | ({DIGITO}+"."{DIGITO}+([eE][-]?)({DIGITO}*"."{DIGITO}*))* {lexeme=yytext(); return ERROR_LITERAL;}
-// 12ab.12 | ab12.12
-({DIGITO}+{LETRA}+"."{DIGITO}+) | ({LETRA}+{DIGITO}+"."{DIGITO}+) {lexeme=yytext(); return ERROR_LITERAL;}
-// 12.12ab | 12.ab12
-({DIGITO}+"."{DIGITO}+{LETRA}+) | ({DIGITO}+"."{LETRA}+{DIGITO}+) {lexeme=yytext(); return ERROR_LITERAL;}
-// ab.12ab | ab.ab12
-({LETRA}+"."{DIGITO}+{LETRA}+) | ({LETRA}+"."{LETRA}+{DIGITO}+) {lexeme=yytext(); return ERROR_LITERAL;}
-// 12. | 12e.
-({DIGITO}+{LETRA}*".") {lexeme=yytext(); return ERROR_LITERAL;}
-// 3,14
-{DIGITO}+","{DIGITO}+ {lexeme=yytext(); return ERROR_LITERAL;}
+/* Palabra reservada Do */
+( do ) {lexeme=yytext(); return Do;}
 
-// Literales
-"#"{LETRA}+ {lexeme=yytext(); return ERROR_LITERAL;}
-'[^'] ~' {lexeme=yytext(); return ERROR_LITERAL;}
+/* Palabra reservada While */
+( while ) {lexeme=yytext(); return While;}
 
-// Comentarios
-\"[^\"]* {lexeme=yytext(); return ERROR;}
-\(\*[^\)\*]* {lexeme=yytext(); return ERROR;}
-\{[^\}]* {lexeme=yytext(); return ERROR;}
+/* Palabra reservada For */
+( for ) {lexeme=yytext(); return For;}
 
-. {return ERROR;}
+/* Operador Igual */
+( "=" ) {lexeme=yytext(); return ASIGNACION;}
 
+/* Operador Suma */
+( "+" ) {lexeme=yytext(); return Suma;}
+
+/* Operador Resta */
+( "-" ) {lexeme=yytext(); return Resta;}
+
+/* Operador Multiplicacion */
+( "*" ) {lexeme=yytext(); return Multiplicacion;}
+
+/* Operador Division */
+( "/" ) {lexeme=yytext(); return Division;}
+
+/* Operadores logicos */
+( "&&" | "||" | "!" | "&" | "|" ) {lexeme=yytext(); return Op_logico;}
+
+/*Operadores Relacionales */
+( ">" | "<" | "==" | "!=" | ">=" | "<=" | "<<" | ">>" ) {lexeme = yytext(); return Op_relacional;}
+
+/* Operadores Atribucion */
+( "+=" | "-="  | "*=" | "/=" | "%=" ) {lexeme = yytext(); return Op_atribucion;}
+
+/* Operadores Incremento y decremento */
+( "++" ) {lexeme = yytext(); return Op_incremento;}
+( "--" ) {lexeme = yytext(); return Op_disminucion;}
+
+/*Operadores Booleanos*/
+(true | false)      {lexeme = yytext(); return Op_booleano;}
+
+/* Parentesis de apertura */
+( "(" ) {lexeme=yytext(); return Parentesis_a;}
+
+/* Parentesis de cierre */
+( ")" ) {lexeme=yytext(); return Parentesis_c;}
+
+/* Llave de apertura */
+( "{" ) {lexeme=yytext(); return Llave_a;}
+
+/* Llave de cierre */
+( "}" ) {lexeme=yytext(); return Llave_c;}
+
+/* Corchete de apertura */
+( "[" ) {lexeme = yytext(); return Corchete_a;}
+
+/* Corchete de cierre */
+( "]" ) {lexeme = yytext(); return Corchete_c;}
+
+/* Marcador de inicio de algoritmo */
+( "main" ) {lexeme=yytext(); return Main;}
+
+/* Palabra reservada void*/
+( "void" ) {lexeme=yytext(); return Void;}
+
+/* Operadores Acceso*/
+( "static" | "protected" | "private" | "public" ) {lexeme=yytext(); return Op_ACCESO;}
+
+/* Punto y coma */
+( ";" ) {lexeme=yytext(); return P_TERMINADOR;}
+
+/* Coma */
+( "," ) {lexeme=yytext(); return COMA;}
+
+/* Punto */
+( "." ) {lexeme=yytext(); return PUNTO;}
+
+/* Dos Puntos */
+( ":" ) {lexeme=yytext(); return Op_DOS_PUNTOS;}
+
+/* Array */
+( "array" ) {lexeme=yytext(); return P_RESERVADA;}
+
+/* Identificador */
+{L}({L}|{D})* {lexeme=yytext(); return IDENTIFICADOR;}
+
+/* Numero */
+("(-"{D}+")")|{D}+ {lexeme=yytext(); return Numero;}
+
+/* Error de analisis */
+ . {return ERROR;}

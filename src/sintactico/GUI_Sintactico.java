@@ -41,92 +41,113 @@ public class GUI_Sintactico extends javax.swing.JFrame {
                 return;
             }
             switch (token) {
-                case COMILLAS:
-                    resultado += "  <Comillas>\t\t" + lexer.lexeme + "\n";
-                    break;
-                case CADENA:
-                    resultado += "  <Tipo de dato>\t" + lexer.lexeme + "\n";
-                    break;
-                case TIPO_DATO:
-                    resultado += "  <Tipo de dato>\t" + lexer.lexeme + "\n";
-                    break;
-                case IF:
-                    resultado += "  <Reservada if>\t" + lexer.lexeme + "\n";
-                    break;
-                case ELSE:
-                    resultado += "  <Reservada else>\t" + lexer.lexeme + "\n";
-                    break;
-                case DO:
-                    resultado += "  <Reservada do>\t" + lexer.lexeme + "\n";
-                    break;
-                case WHILE:
-                    resultado += "  <Reservada while>\t" + lexer.lexeme + "\n";
-                    break;
-                case FOR:
-                    resultado += "  <Reservada while>\t" + lexer.lexeme + "\n";
-                    break;
-                case OPERADOR_ASIGNACION:
-                    resultado += "  <Operador igual>\t" + lexer.lexeme + "\n";
-                    break;
-                case OPERADOR_ADICION:
-                    resultado += "  <Operador suma>\t" + lexer.lexeme + "\n";
-                    break;
-                case OPERADOR_SUSTRACCION:
-                    resultado += "  <Operador resta>\t" + lexer.lexeme + "\n";
-                    break;
-                case OPERADOR_MULTIPLICACION:
-                    resultado += "  <Operador multiplicacion>\t" + lexer.lexeme + "\n";
-                    break;
-                case OPERADOR_DIVISION:
-                    resultado += "  <Operador division>\t" + lexer.lexeme + "\n";
-                    break;
-                case OPERADOR_LOGICO:
-                    resultado += "  <Operador logico>\t" + lexer.lexeme + "\n";
-                    break;
-                case OPERADOR_INCREMENTO:
-                    resultado += "  <Operador incremento>\t" + lexer.lexeme + "\n";
-                    break;
-                case OPERADOR_RELACIONAL:
-                    resultado += "  <Operador relacional>\t" + lexer.lexeme + "\n";
-                    break;
-                case OPERADOR_ASIGNACION_ADICION:
-                case OPERADOR_ASIGNACION_SUSTRACCION:
-                case OPERADOR_ASIGNACION_MULTIPLICACION:
-                case OPERADOR_ASIGNACION_DIVISION:
-                    resultado += "  <Operador atribucion>\t" + lexer.lexeme + "\n";
-                    break;
-                case OPERADOR_BOOLEANO:
-                    resultado += "  <Operador booleano>\t" + lexer.lexeme + "\n";
-                    break;
-                case OPERADOR_PARENTESIS_ABRIR:
-                    resultado += "  <Parentesis de apertura>\t" + lexer.lexeme + "\n";
-                    break;
-                case OPERADOR_PARENTESIS_CERRAR:
-                    resultado += "  <Parentesis de cierre>\t" + lexer.lexeme + "\n";
-                    break;
-                case OPERADOR_LLAVE_ABRIR:
-                    resultado += "  <Llave de apertura>\t" + lexer.lexeme + "\n";
-                    break;
-                case OPERADOR_LLAVE_CERRAR:
-                    resultado += "  <Llave de cierre>\t" + lexer.lexeme + "\n";
-                    break;
-                case OPERADOR_CORCHETE_ABRIR:
-                    resultado += "  <Corchete de apertura>\t" + lexer.lexeme + "\n";
-                    break;
-                case OPERADOR_CORCHETE_CERRAR:
-                    resultado += "  <Corchete de cierre>\t" + lexer.lexeme + "\n";
-                    break;
-                case MAIN:
-                    resultado += "  <Reservada main>\t" + lexer.lexeme + "\n";
-                    break;
-                case TERMINADOR:
-                    resultado += "  <Punto y coma>\t" + lexer.lexeme + "\n";
-                    break;
                 case IDENTIFICADOR:
                     resultado += "  <Identificador>\t\t" + lexer.lexeme + "\n";
                     break;
-                case LITERAL_NUM_ENTERO:
-                    resultado += "  <Numero>\t\t" + lexer.lexeme + "\n";
+                case Comillas:
+                    resultado += "  <Comillas>\t\t" + lexer.lexeme + "\n";
+                    break;
+                case Linea:
+                    resultado += "  <Linea>\t\t" + lexer.lexeme + "\n";
+                    break;
+                case P_RESERVADA:
+                    resultado += "  <Palabra Reservada>\t\t" + lexer.lexeme + "\n";
+                    break;
+                case Void:
+                    resultado += "  <Palabra Reservada>\t\t" + lexer.lexeme + "\n";
+                    break;
+                case Main:
+                    resultado += "  <Palabra Reservada>\t" + lexer.lexeme + "\n";
+                    break;
+                case Op_ACCESO:
+                    resultado += "  <Operador Acceso>\t\t" + lexer.lexeme + "\n";
+                    break;
+                case Suma:
+                    resultado += "  <Operador suma>\t" + lexer.lexeme + "\n";
+                    break;
+                case Resta:
+                    resultado += "  <Operador resta>\t" + lexer.lexeme + "\n";
+                    break;
+                case Multiplicacion:
+                    resultado += "  <Operador multiplicacion>\t" + lexer.lexeme + "\n";
+                    break;
+                case Division:
+                    resultado += "  <Operador division>\t" + lexer.lexeme + "\n";
+                    break;
+                case ASIGNACION:
+                    resultado += "  <Operador igual>\t" + lexer.lexeme + "\n";
+                    break;
+                case Op_incremento:
+                    resultado += "  <Operador incremento>\t" + lexer.lexeme + "\n";
+                    break;
+                case Op_disminucion:
+                    resultado += "  <Operador disminucion>\t" + lexer.lexeme + "\n";
+                    break;
+                case Op_atribucion:
+                    resultado += "  <Operador atribucion>\t" + lexer.lexeme + "\n";
+                    break;
+                case If:
+                    resultado += "  <Reservada if>\t" + lexer.lexeme + "\n";
+                    break;
+                case Else:
+                    resultado += "  <Reservada else>\t" + lexer.lexeme + "\n";
+                    break;
+                case Do:
+                    resultado += "  <Reservada do>\t" + lexer.lexeme + "\n";
+                    break;
+                case While:
+                    resultado += "  <Reservada while>\t" + lexer.lexeme + "\n";
+                    break;
+                case For:
+                    resultado += "  <Reservada while>\t" + lexer.lexeme + "\n";
+                    break;
+                case PUNTO:
+                    resultado += "  <Punto>\t" + lexer.lexeme + "\n";
+                    break;
+                case Op_DOS_PUNTOS:
+                    resultado += "  <Dos puntos>\t" + lexer.lexeme + "\n";
+                    break;
+                case P_TERMINADOR:
+                    resultado += "  <Punto y coma>\t" + lexer.lexeme + "\n";
+                    break;
+                case COMA:
+                    resultado += "  <Coma>\t" + lexer.lexeme + "\n";
+                    break;
+                case T_dato:
+                    resultado += "  <Tipo de dato>\t" + lexer.lexeme + "\n";
+                    break;
+                case Numero:
+                    resultado += "  <Identificador Numero>\t" + lexer.lexeme + "\n";
+                    break;
+                case Cadena:
+                    resultado += "  <Identificador Cadena\t" + lexer.lexeme + "\n";
+                    break;
+                case Op_logico:
+                    resultado += "  <Operador logico>\t" + lexer.lexeme + "\n";
+                    break;
+                case Op_booleano:
+                    resultado += "  <Operador booleano>\t" + lexer.lexeme + "\n";
+                    break;
+                case Op_relacional:
+                    resultado += "  <Operador relacional>\t" + lexer.lexeme + "\n";
+                    break;
+                case Parentesis_a:
+                    resultado += "  <Parentesis de apertura>\t" + lexer.lexeme + "\n";
+                    break;
+                case Parentesis_c:
+                    resultado += "  <Parentesis de cierre>\t" + lexer.lexeme + "\n";
+                    break;
+                case Llave_a:
+                    resultado += "  <Llave de apertura>\t" + lexer.lexeme + "\n";
+                    break;
+                case Llave_c:
+                    resultado += "  <Llave de cierre>\t" + lexer.lexeme + "\n";
+                    break;
+                case Corchete_a:
+                    resultado += "  <Corchete de apertura>\t" + lexer.lexeme + "\n";
+                    break;
+                case Corchete_c:
+                    resultado += "  <Corchete de cierre>\t" + lexer.lexeme + "\n";
                     break;
                 case ERROR:
                     resultado += "  <Simbolo no definido>\n";
@@ -294,17 +315,20 @@ public class GUI_Sintactico extends javax.swing.JFrame {
     private void btnAnalizarSinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizarSinActionPerformed
         // TODO add your handling code here:
         String ST = txtResultado.getText();
-        Syntax s = new Syntax(new LexerCup(new StringReader(ST)));
+        Syntax s = new Syntax(new sintactico.LexerCup(new StringReader(ST)));
         try {
             s.parse();
             txtAnalizarSin.setText("Analisis realizado correctamente");
             txtAnalizarSin.setForeground(new Color(25, 111, 61));
         } catch (Exception ex) {
             Symbol sym = s.getS();
+            String msg = s.toString();
+            //txtAnalizarSin.setText(msg);
             txtAnalizarSin.setText("Error de sintaxis. Linea: " + (sym.right + 1) + " Columna: " + (sym.left + 1) + ", Texto: \"" + sym.value + "\"");
             txtAnalizarSin.setForeground(Color.red);
         }
     }//GEN-LAST:event_btnAnalizarSinActionPerformed
+
 
     private void btnLimpiarSinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarSinActionPerformed
         // TODO add your handling code here:

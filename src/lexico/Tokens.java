@@ -6,77 +6,61 @@ package lexico;
  */
 public enum Tokens {
 
-    // |------------------- IDENTIFICADORES -------------------|
+    /*Identificador*/
     IDENTIFICADOR("Identificador"),
-    // |------------------- OPERADORES -------------------|
-    OPERADOR("Operador"),
-    // Aritmeticos : XOR DIV MOD
-    COMILLAS("Comillas"),
-    CADENA("Cadena"),
-    TIPO_DATO("Tipo Dato"),
-    OPERADOR_ADICION("Operador de adición"),
-    OPERADOR_SUSTRACCION("Operador de sustracción"),
-    OPERADOR_MULTIPLICACION("Operador de multiplicación"),
-    OPERADOR_DIVISION("Operador de división"),
-    OPERADOR_LOGICO("Operador logico"),
-    OPERADOR_SIGNO("Operador de signo"),
-    MAIN("Main"),
-    IF("If"),
-    ELSE("Else"),
-    DO("Do"),
-    WHILE("While"),
-    FOR("For"),
-    // Monarios
-    OPERADOR_INCREMENTO("Operador de increment unario"),
-    OPERADOR_DISMINUCION("Operador de disminución unario"),
-    // Lógicos : NOT OR AND
-    OPERADOR_MAYOR_QUE("Operador mayor que"),
-    OPERADOR_MAYOR_IGUAL_QUE("Operador mayor o igual que"),
-    OPERADOR_MENOR_QUE("Operador menor que"),
-    OPERADOR_MENOR_IGUAL_QUE("Operador menor o igual que"),
-    OPERADOR_IGUAL("Operador de igualdad"),
-    OPERADOR_DISTINTO("Operador distinto que"),
-    // Asignación
-    OPERADOR_ASIGNACION("Operador de asignación simple"),
-    OPERADOR_ASIGNACION_MULTIPLICACION("Operador de asignación de multiplicacion"),
-    OPERADOR_ASIGNACION_DIVISION("Operador de asignación de división"),
-    OPERADOR_ASIGNACION_ADICION("Operador de asignación de adición"),
-    OPERADOR_ASIGNACION_SUSTRACCION("Operador de asignación de sustracción"),
-    OPERADOR_ASIGNACION_DESPLAZAMIENTO_DERECHA("Operador de asignación del desplazamiento derecha"),
-    OPERADOR_ASIGNACION_DESPLAZAMIENTO_IZQUIERDA("Operador de asignación del desplazamiento izquierda"),
-    // Bits
-    OPERADOR_DESPLAZAMIENTO_DERECHA("Operador desplazamiento derecha"),
-    OPERADOR_DESPLAZAMIENTO_IZQUIERDA("Operador desplazamiento izquierda"),
-    // Corchetes
-    OPERADOR_PARENTESIS_ABRIR("Operador parentesis abierto"), // ( )
-    OPERADOR_PARENTESIS_CERRAR("Operador parentesis cerrado"),
-    OPERADOR_CORCHETE_ABRIR("Operador corchete abierto"), // [ ]
-    OPERADOR_CORCHETE_CERRAR("Operador corchete cerrado"),
-    OPERADOR_LLAVE_ABRIR("Operador llave abierta"), //  { }
-    OPERADOR_LLAVE_CERRAR("Operador llave cerrada"),
-    // |------------------- PALABRAS RESERVADA -------------------|
-    PALABRA_RESERVADA("Palabra reservada"),
-    // |------------------- LITERALES -------------------|
-    LITERAL("Literal"),
-    LITERAL_NUM_ENTERO("Literal número entero"),
-    LITERAL_NUM_FLOTANTE("Literal número flotante"),
-    LITERAL_CARACTER("Literal caracter"),
-    LITERAL_STRING("Literal strings"),
-    // |------------------- ERRRORES -------------------|
-    ERROR("Error"),
-    ERROR_LITERAL("Error literal"),
-    ERROR_IDENTIFICADOR("Error de identificador"),
-    ERROR_PALABRA_RESERVADA("Error de palabra reservada"),
-    ERROR_OPERADOR("Error de operador"),
-    COMENTARIO("Comentario"),
-    OPERADOR_DIFERENTE_DE("Comentario"),
-    OPERADOR_DOS_PUNTOS("Operador dos puntos"),
-    OPERADOR_PUNTO("Operador punto"),
-    OPERADOR_COMA("Operador coma"),
-    OPERADOR_RELACIONAL("Operador relacional"),
-    OPERADOR_BOOLEANO("Operador booleanos"),
-    TERMINADOR("Terminador");  
+    Comillas("Comillas"),
+    Linea("linea"),
     
+    /*Palabras Reservadas*/
+    P_RESERVADA("Palabra reservada"),
+    Void("Palabra Reservada"),
+    Main("Palabra Reservada"),
+    Op_ACCESO("Operado de acceso"),
+    
+    /*Operaciones Arimeticas*/
+    Suma("Operador de adición"),
+    Resta("Operador de sustracción"),
+    Multiplicacion("Operador de multiplicación"),
+    Division("Operador de división"),
+    ASIGNACION("Operador de signo igual"),
+    Op_incremento("Operador de increment unario"),
+    Op_disminucion("Operador de disminución unario"),
+    Op_atribucion("Operador de atribucion"),
+    
+    /*Sentencias*/
+    If("If"),
+    Else("Else"),
+    Do("Do"),
+    While("While"),
+    For("For"),
+    
+    /*Puntos y Terminador*/
+    PUNTO("Operador punto"),
+    Op_DOS_PUNTOS("Operador dos puntos"),
+    P_TERMINADOR("Operadors punto y coma"),
+    COMA("Operador coma"),
+    
+    /*Tipo Datos*/
+    T_dato("Tipo Dato"),
+    Numero("Numero"),
+    Cadena("Cadena"),
+    
+    /*Operadores logicos*/
+    Op_logico("Operador logico"),
+    Op_booleano("Operador Booleano"),
+    Op_relacional("Operador relacional"),
+    
+    /*Llaves, Corchetes, Parentesis*/
+    Parentesis_a("Operador parentesis abierto"),
+    Parentesis_c("Operador parentesis cerrado"),
+    Corchete_a("Operador corchete abierto"),
+    Corchete_c("Operador corchete cerrado"),
+    Llave_a("Operador llave abierta"),
+    Llave_c("Operador llave cerrada"),
+    
+    /*Error*/
+    ERROR("Error");
+
     String nombre;
 
     Tokens(String pNombre) {

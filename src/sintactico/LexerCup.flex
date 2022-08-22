@@ -28,10 +28,13 @@ espacio=[ ,\t,\r,\n]+
 /* Comentarios */
 ( "//"(.)* ) {/*Ignore*/}
 
+/* Salto de linea */
+( "\n" ) {return Linea;}
+
 /* Comillas */
 ( "\"" ) {return new Symbol(sym.Comillas, yychar, yyline, yytext());}
 
-/* Tipos de datos */
+/* Tipos de datos numericos */
 ( byte | char | long | float | double ) {return new Symbol(sym.T_dato, yychar, yyline, yytext());}
 
 /* Tipo de dato Int (Para el main) */

@@ -111,18 +111,119 @@ public class GUI_Lexico extends javax.swing.JFrame {
                     return;
                 }
                 switch (tokens) {
-                    case ERROR:
-                        resultado += "Simbolo no definido\n";
-                        break;
                     case IDENTIFICADOR:
-                    case PALABRA_RESERVADA:
-                    case LITERAL_NUM_ENTERO:
-                    case LITERAL_NUM_FLOTANTE:
-                    case LITERAL_STRING:
-                        resultado += lexer.lexeme + ": Es un " + tokens + "\n";
+                        resultado += "  <Identificador>\t\t" + lexer.lexeme + "\n";
+                        break;
+                    case Comillas:
+                        resultado += "  <Comillas>\t\t" + lexer.lexeme + "\n";
+                        break;
+                    case Linea:
+                        resultado += "  <Linea>\t\t" + lexer.lexeme + "\n";
+                        break;
+                    case P_RESERVADA:
+                        resultado += "  <Palabra Reservada>\t\t" + lexer.lexeme + "\n";
+                        break;
+                    case Void:
+                        resultado += "  <Palabra Reservada>\t\t" + lexer.lexeme + "\n";
+                        break;
+                    case Main:
+                        resultado += "  <Palabra Reservada>\t" + lexer.lexeme + "\n";
+                        break;
+                    case Op_ACCESO:
+                        resultado += "  <Operador Acceso>\t\t" + lexer.lexeme + "\n";
+                        break;
+                    case Suma:
+                        resultado += "  <Operador suma>\t" + lexer.lexeme + "\n";
+                        break;
+                    case Resta:
+                        resultado += "  <Operador resta>\t" + lexer.lexeme + "\n";
+                        break;
+                    case Multiplicacion:
+                        resultado += "  <Operador multiplicacion>\t" + lexer.lexeme + "\n";
+                        break;
+                    case Division:
+                        resultado += "  <Operador division>\t" + lexer.lexeme + "\n";
+                        break;
+                    case ASIGNACION:
+                        resultado += "  <Operador igual>\t" + lexer.lexeme + "\n";
+                        break;
+                    case Op_incremento:
+                        resultado += "  <Operador incremento>\t" + lexer.lexeme + "\n";
+                        break;
+                    case Op_disminucion:
+                        resultado += "  <Operador disminucion>\t" + lexer.lexeme + "\n";
+                        break;
+                    case Op_atribucion:
+                        resultado += "  <Operador atribucion>\t" + lexer.lexeme + "\n";
+                        break;
+                    case If:
+                        resultado += "  <Reservada if>\t" + lexer.lexeme + "\n";
+                        break;
+                    case Else:
+                        resultado += "  <Reservada else>\t" + lexer.lexeme + "\n";
+                        break;
+                    case Do:
+                        resultado += "  <Reservada do>\t" + lexer.lexeme + "\n";
+                        break;
+                    case While:
+                        resultado += "  <Reservada while>\t" + lexer.lexeme + "\n";
+                        break;
+                    case For:
+                        resultado += "  <Reservada while>\t" + lexer.lexeme + "\n";
+                        break;
+                    case PUNTO:
+                        resultado += "  <Punto>\t" + lexer.lexeme + "\n";
+                        break;
+                    case Op_DOS_PUNTOS:
+                        resultado += "  <Dos puntos>\t" + lexer.lexeme + "\n";
+                        break;
+                    case P_TERMINADOR:
+                        resultado += "  <Punto y coma>\t" + lexer.lexeme + "\n";
+                        break;
+                    case COMA:
+                        resultado += "  <Coma>\t" + lexer.lexeme + "\n";
+                        break;
+                    case T_dato:
+                        resultado += "  <Tipo de dato>\t" + lexer.lexeme + "\n";
+                        break;
+                    case Numero:
+                        resultado += "  <Identificador Numero>\t" + lexer.lexeme + "\n";
+                        break;
+                    case Cadena:
+                        resultado += "  <Identificador Cadena\t" + lexer.lexeme + "\n";
+                        break;
+                    case Op_logico:
+                        resultado += "  <Operador logico>\t" + lexer.lexeme + "\n";
+                        break;
+                    case Op_booleano:
+                        resultado += "  <Operador booleano>\t" + lexer.lexeme + "\n";
+                        break;
+                    case Op_relacional:
+                        resultado += "  <Operador relacional>\t" + lexer.lexeme + "\n";
+                        break;
+                    case Parentesis_a:
+                        resultado += "  <Parentesis de apertura>\t" + lexer.lexeme + "\n";
+                        break;
+                    case Parentesis_c:
+                        resultado += "  <Parentesis de cierre>\t" + lexer.lexeme + "\n";
+                        break;
+                    case Llave_a:
+                        resultado += "  <Llave de apertura>\t" + lexer.lexeme + "\n";
+                        break;
+                    case Llave_c:
+                        resultado += "  <Llave de cierre>\t" + lexer.lexeme + "\n";
+                        break;
+                    case Corchete_a:
+                        resultado += "  <Corchete de apertura>\t" + lexer.lexeme + "\n";
+                        break;
+                    case Corchete_c:
+                        resultado += "  <Corchete de cierre>\t" + lexer.lexeme + "\n";
+                        break;
+                    case ERROR:
+                        resultado += "  <Simbolo no definido>\n";
                         break;
                     default:
-                        resultado += lexer.lexeme + ": Token | " + tokens + "\n";
+                        resultado += "  < " + lexer.lexeme + " >\n";
                         break;
                 }
             }

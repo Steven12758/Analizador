@@ -3,16 +3,18 @@ package sintactico;
 import java_cup.runtime.Symbol;
 
 parser code
-{:
-    private Symbol s;
+{:  
     
+    private Symbol s;
+
     public void syntax_error(Symbol s){
         this.s = s;
     }
-
+       
     public Symbol getS(){
-        return this.s;
-}
+       return this.s;
+    }
+
 :};
 
 terminal Linea, Comillas, T_dato, Int, Cadena, If, Else, Do, While, For,
