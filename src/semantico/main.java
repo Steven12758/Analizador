@@ -46,5 +46,6 @@ public class main {
     public static void generarLexer(String path) {
         File file = new File(path);
         JFlex.Main.generate(file);
+        
     }
 }

@@ -9,10 +9,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.util.HashSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java_cup.runtime.Scanner;
-import java_cup.runtime.Symbol;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -22,22 +19,36 @@ import javax.swing.table.DefaultTableModel;
  */
 public class GUI_Semantico extends javax.swing.JFrame {
 
-    DefaultTableModel dataTable;
+    DefaultTableModel tlexico;
+    DefaultTableModel tsintactico;
 
-    String If = "";
-    String While = "";
     int conta = 0;
     String[][] ts = new String[100][7];
 
+    HashSet<String> palabras_r;
+    HashSet<String> identificador;
+    HashSet<String> cadenas;
+    HashSet<String> numerico;
+    HashSet<String> simbolo;
+
     public GUI_Semantico() {
         initComponents();
-    }
+        setLocationRelativeTo(null);
 
-    public void initTable() {
-        dataTable = new DefaultTableModel();
-        dataTable.addColumn("Tokens - Lexema");
-        dataTable.addColumn("Tipo");
-        this.TableSimbolos1.setModel(dataTable);
+        tlexico = new DefaultTableModel();
+        tlexico.addColumn("TOKEN");
+        tlexico.addColumn("SIMBOLO");
+        this.TableLexico.setModel(tlexico);
+        /*Tabla sintactico*/
+        tsintactico = new DefaultTableModel();
+        tsintactico.addColumn("TOKEN");
+        tsintactico.addColumn("PRESERVADA");
+        tsintactico.addColumn("ID");
+        tsintactico.addColumn("CADENA");
+        tsintactico.addColumn("NUMERICO");
+        tsintactico.addColumn("SIMBOLO");
+        tsintactico.addColumn("TIPO");
+        this.TableSimbolos.setModel(tsintactico);
     }
 
     /**
@@ -54,28 +65,26 @@ public class GUI_Semantico extends javax.swing.JFrame {
         txtInput = new javax.swing.JTextArea();
         jLabel2 = new javax.swing.JLabel();
         BtnAnalziar = new javax.swing.JButton();
-        BtnIf = new javax.swing.JButton();
-        BtnWhile = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         TableSimbolos = new javax.swing.JTable();
-        jLabel4 = new javax.swing.JLabel();
         BtnMostrarArbol = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         TxtErrorSint = new javax.swing.JTextArea();
         BtnLimpiar = new javax.swing.JButton();
         jScrollPane5 = new javax.swing.JScrollPane();
-        TableSimbolos1 = new javax.swing.JTable();
+        TableLexico = new javax.swing.JTable();
         jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel1.setText("Instrucciones");
+        jLabel1.setText("Sentencias");
 
         txtInput.setColumns(20);
         txtInput.setRows(5);
-        txtInput.setText("apublic rvoid main(\"expresion\"){\n\"ejemplo\"\n}");
+        txtInput.setText("public void main(\"expresion\"){\nString s=\"ejemplo\";\nfor(int i=0; i<=0; i++){\nif(a==b){\nint z=0;\n}\n}\n}");
         jScrollPane1.setViewportView(txtInput);
 
         jLabel2.setFont(new java.awt.Font("Comic Sans MS", 0, 24)); // NOI18N
@@ -91,46 +100,13 @@ public class GUI_Semantico extends javax.swing.JFrame {
             }
         });
 
-        BtnIf.setText("IF");
-        BtnIf.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BtnIfActionPerformed(evt);
-            }
-        });
-
-        BtnWhile.setText("WHILE");
-        BtnWhile.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BtnWhileActionPerformed(evt);
-            }
-        });
-
         TableSimbolos.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
-        TableSimbolos.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "TOKEN", "RESERVADA", "IDENTIFICADOR", "CADENA", "NUMERO", "SIMBOLO", "TIPO"
-            }
-        ));
         jScrollPane3.setViewportView(TableSimbolos);
-        if (TableSimbolos.getColumnModel().getColumnCount() > 0) {
-            TableSimbolos.getColumnModel().getColumn(0).setHeaderValue("TOKEN");
-            TableSimbolos.getColumnModel().getColumn(1).setHeaderValue("RESERVADA");
-            TableSimbolos.getColumnModel().getColumn(2).setResizable(false);
-            TableSimbolos.getColumnModel().getColumn(2).setHeaderValue("IDENTIFICADOR");
-            TableSimbolos.getColumnModel().getColumn(3).setHeaderValue("CADENA");
-            TableSimbolos.getColumnModel().getColumn(5).setHeaderValue("SIMBOLO");
-        }
-
-        jLabel4.setFont(new java.awt.Font("Comic Sans MS", 3, 18)); // NOI18N
-        jLabel4.setText("Tabla de Simbolos");
 
         BtnMostrarArbol.setBackground(new java.awt.Color(0, 51, 255));
         BtnMostrarArbol.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         BtnMostrarArbol.setForeground(new java.awt.Color(255, 255, 255));
-        BtnMostrarArbol.setText("Mostrar Árbol");
+        BtnMostrarArbol.setText("Generar Arbol");
         BtnMostrarArbol.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BtnMostrarArbolActionPerformed(evt);
@@ -154,19 +130,14 @@ public class GUI_Semantico extends javax.swing.JFrame {
             }
         });
 
-        TableSimbolos1.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
-        TableSimbolos1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "LINEA", "SIMBOLO"
-            }
-        ));
-        jScrollPane5.setViewportView(TableSimbolos1);
+        TableLexico.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
+        jScrollPane5.setViewportView(TableLexico);
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel5.setText("Analisis Lexico");
+        jLabel5.setText("Analisis Sintactico - Tabla Simbolos");
+
+        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel6.setText("Analisis Lexico");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -176,76 +147,66 @@ public class GUI_Semantico extends javax.swing.JFrame {
                 .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addGap(441, 441, 441)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(BtnAnalziar, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(33, 33, 33)
-                                        .addComponent(BtnMostrarArbol))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(289, 289, 289)
-                                        .addComponent(BtnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addComponent(jLabel3)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel1)
                                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 436, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(113, 113, 113)
-                                        .addComponent(BtnIf)
-                                        .addGap(55, 55, 55)
-                                        .addComponent(BtnWhile)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(jLabel2))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel4)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 369, Short.MAX_VALUE))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addComponent(BtnAnalziar, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(BtnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(BtnMostrarArbol))
+                                    .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel5)
-                                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 521, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING))
-                        .addGap(15, 15, 15))))
+                                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 521, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel6))
+                                        .addGap(0, 0, Short.MAX_VALUE)))))
+                        .addGap(30, 30, 30))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(327, 327, 327)
+                .addComponent(jLabel5)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(23, 23, 23)
+                .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
-                    .addComponent(BtnAnalziar, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(BtnAnalziar, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(BtnMostrarArbol, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(BtnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(13, 13, 13)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(13, 13, 13)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel6)))
+                .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(BtnIf)
-                        .addComponent(BtnWhile)))
-                .addGap(24, 24, 24)
+                .addGap(15, 15, 15)
+                .addComponent(jLabel5)
+                .addGap(15, 15, 15)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(19, 19, 19)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(22, 22, 22))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(30, Short.MAX_VALUE))
         );
 
         pack();
@@ -262,19 +223,22 @@ public class GUI_Semantico extends javax.swing.JFrame {
             TxtErrorSint.setForeground(new Color(25, 111, 61));
         } catch (Exception ex) {
             System.out.println("RESULTADO: NO SE HA PODIDO COMPILAR");
+            System.out.println(Lexer.ErroresLexicos);
             System.out.println(parser.Errores);
-            TxtErrorSint.setText("RESULTADO: NO SE HA PODIDO COMPILAR");
-            TxtErrorSint.setText("" + parser.Errores);
+            //TxtErrorSint.setText("RESULTADO: NO SE HA PODIDO COMPILAR");
+            //TxtErrorSint.setText("" + Lexer.ErroresLexicos);
+            TxtErrorSint.append("" + Lexer.ErroresLexicos);
+            TxtErrorSint.append("" + parser.Errores);
+            // TxtErrorSint.setText("" + parser.Errores);
             TxtErrorSint.setForeground(Color.red);
         }
     }//GEN-LAST:event_BtnAnalziarActionPerformed
 
     public void mostrarListas() {
-        // TOKEN - PR - IDENTIFICADOR - CADENA - NUMERO - SIMBOLO - TIPO
-        //PALABRAS RESERVADAS
-        HashSet<String> hashSet = new HashSet<>(parser.PalabraReservada);
+        /*PALABRAS RESERVADAS*/
+        palabras_r = new HashSet<>(parser.PalabraReservada);
         parser.PalabraReservada.clear();
-        parser.PalabraReservada.addAll(hashSet);
+        parser.PalabraReservada.addAll(palabras_r);
         for (String cadena : parser.PalabraReservada) {
             System.out.println(conta + " Palabra Reservada: " + cadena);
             ts[conta][0] = conta + ". " + cadena;
@@ -286,12 +250,12 @@ public class GUI_Semantico extends javax.swing.JFrame {
             ts[conta][6] = "";
             conta++;
         }
-        //VALORES VARIABLES
-        HashSet<String> hashSet5 = new HashSet<>(parser.Variables);
+        /*VALORES VARIABLES*/
+        identificador = new HashSet<>(parser.Variables);
         parser.Variables.clear();
-        parser.Variables.addAll(hashSet5);
+        parser.Variables.addAll(identificador);
         for (String cadena : parser.Variables) {
-            System.out.println(conta + " Variables: " + cadena);
+            System.out.println(conta + " Identificador: " + cadena);
             ts[conta][0] = conta + ". " + cadena;
             ts[conta][2] = "x";
             ts[conta][6] = "";
@@ -302,11 +266,10 @@ public class GUI_Semantico extends javax.swing.JFrame {
             ts[conta][6] = "";
             conta++;
         }
-        // TOKEN - PR - IDENTIFICADOR - CADENA - NUMERO - SIMBOLO - TIPO
-        //CADENAS
-        HashSet<String> hashSet3 = new HashSet<>(parser.Cadenas);
+        /*CADENAS*/
+        cadenas = new HashSet<>(parser.Cadenas);
         parser.Cadenas.clear();
-        parser.Cadenas.addAll(hashSet3);
+        parser.Cadenas.addAll(cadenas);
         for (String cadena : parser.Cadenas) {
             System.out.println(conta + " Cadena: " + cadena);
             ts[conta][0] = conta + ". " + cadena;
@@ -318,10 +281,10 @@ public class GUI_Semantico extends javax.swing.JFrame {
             ts[conta][5] = "";
             conta++;
         }
-        //VALORES NUMÉRICOS
-        HashSet<String> hashSet4 = new HashSet<>(parser.ValoresNumericos);
+        /*VALORES NUMÉRICOS*/
+        numerico = new HashSet<>(parser.ValoresNumericos);
         parser.ValoresNumericos.clear();
-        parser.ValoresNumericos.addAll(hashSet4);
+        parser.ValoresNumericos.addAll(numerico);
         for (String cadena : parser.ValoresNumericos) {
             System.out.println(conta + " Valores numéricos: " + cadena);
             ts[conta][0] = conta + ". " + cadena;
@@ -333,10 +296,10 @@ public class GUI_Semantico extends javax.swing.JFrame {
             ts[conta][5] = "";
             conta++;
         }
-        //SIMBOLOS
-        HashSet<String> hashSet2 = new HashSet<>(parser.Simbolo);
+        /*SIMBOLOS*/
+        simbolo = new HashSet<>(parser.Simbolo);
         parser.Simbolo.clear();
-        parser.Simbolo.addAll(hashSet2);
+        parser.Simbolo.addAll(simbolo);
         for (String cadena : parser.Simbolo) {
             System.out.println(conta + " Simbolo: " + cadena);
             ts[conta][0] = conta + ". " + cadena;
@@ -350,24 +313,24 @@ public class GUI_Semantico extends javax.swing.JFrame {
         }
         // TOKEN - PR - IDENTIFICADOR - CADENA - NUMERO - SIMBOLO - TIPO
         for (int i = 0; i < conta - 1; i++) {
-            System.out.println("Token: " + ts[i][0] + " TR: " + ts[i][1] + " IDENT: " + ts[i][2] + " CADENA: " + ts[i][3] + " NUMERO: " + ts[i][4] + " SIMBOLO: " + ts[i][5] + " TIPO: " + ts[i][6]);
+            System.out.println("Token: " + ts[i][0] + " PR: " + ts[i][1] + " ID: " + ts[i][2] + " CADENA: " + ts[i][3] + " NUMERO: " + ts[i][4] + " SIMBOLO: " + ts[i][5] + " TIPO: " + ts[i][6]);
         }
         cargarTabla();
     }
 
     public void cargarTabla() {
-        DefaultTableModel modelo = (DefaultTableModel) TableSimbolos.getModel();
-        Object[] miTabla = new Object[7]; //Creo un Objeto de tres campos
-        for (int i = 0; i < conta - 1; i++) {
-            miTabla[0] = ts[i][0]; //token
-            miTabla[1] = ts[i][1]; //palabra reservada
-            miTabla[2] = ts[i][2]; //identificador
-            miTabla[3] = ts[i][3]; //cadena
-            miTabla[4] = ts[i][4]; //numero
-            miTabla[5] = ts[i][5]; //simbolo
-            miTabla[6] = ts[i][6]; //tipo
-            modelo.addRow(miTabla); //Se agrega un nuevo registro a la tabla y se envia el objeto creado
-            TableSimbolos.setModel(modelo); //se pasa el modelo a la tabla...   
+        Object[] simbolos = new Object[7];
+        for (int i = 0; i < conta; i++) {
+            System.out.println(ts[i][0]);
+            simbolos[0] = ts[i][0]; //token
+            simbolos[1] = ts[i][1]; //palabra reservada
+            simbolos[2] = ts[i][2]; //identificador
+            simbolos[3] = ts[i][3]; //cadena
+            simbolos[4] = ts[i][4]; //numero
+            simbolos[5] = ts[i][5]; //simbolo
+            simbolos[6] = ts[i][6]; //tipo
+            System.out.println("ss");
+            tsintactico.addRow(simbolos);
         }
     }
 
@@ -383,23 +346,21 @@ public class GUI_Semantico extends javax.swing.JFrame {
 
     //TRADUCIR A GRAPHVIZ
     public void graficar(Nodo raiz) {
-        FileWriter archivo = null;
-        PrintWriter pw = null;
         String cadena = recorrido(raiz);
         try {
-            archivo = new FileWriter("src/Salida/arbol.dot");
-            pw = new PrintWriter(archivo);
-            pw.println("digraph G {node[shape=octagon, style=filled, color=blanchedalmond]; edge[color=chocolate3];rankdir=UD \n");
-            pw.println(cadena);
-            pw.println("\n}");
-            archivo.close();
+            try ( FileWriter archivo = new FileWriter("src/semantico/arbol.dot")) {
+                PrintWriter pw = new PrintWriter(archivo);
+                pw.println("digraph G {node[shape=ellipse, style=filled, color=salmon]; edge[color=black];rankdir=UD \n");
+                pw.println(cadena);
+                pw.println("\n}");
+            }
             System.out.println("Arbol Generado con exito");
         } catch (IOException e) {
             System.out.println(e + " 1");
         }
         try {
-            String dotPath = "c:\\Program Files (x86)\\Graphviz2.38\\bin\\dot.exe"; //RUTA DE GRAPHVIZ
-            String cmd = dotPath + " -Tpng src/Salida/arbol.dot -o src/Salida/arbol.png";
+            String dotPath = "/usr/bin/dot"; //RUTA DE GRAPHVIZ
+            String cmd = dotPath + " -Tpng src/semantico/arbol.dot -o src/semantico/arbol.png";
             Runtime.getRuntime().exec(cmd);
         } catch (IOException ioe) {
             System.out.println(ioe + " 2");
@@ -407,258 +368,203 @@ public class GUI_Semantico extends javax.swing.JFrame {
     }
 
     private void analizarLexico() throws IOException {
-        int cont = 1;
-        DefaultTableModel modelo = (DefaultTableModel) TableSimbolos1.getModel();
-        Object[] lexico = new Object[2];
-
         String expr = (String) txtInput.getText();
+        Object[] lexico = new Object[2];
         Lexico lexer = new Lexico(new StringReader(expr));
-        String resultado = "SENTENCIA" + "\t\tSIMBOLO\n";
         while (true) {
             lexico.Tokens token = lexer.yylex();
             if (token == null) {
-                lexico[0] = resultado;
+                lexico[0] = null;
+                lexico[1] = null;
                 return;
             }
             switch (token) {
                 case IDENTIFICADOR:
                     lexico[0] = "<Identificador>";
                     lexico[1] = lexer.lexeme;
-                    resultado += "<Identificador>\t" + lexer.lexeme + "\n";
                     break;
                 case Comillas:
                     lexico[0] = "<Comillas>";
                     lexico[1] = lexer.lexeme;
-                    resultado += "<Comillas>\t\t" + lexer.lexeme + "\n";
                     break;
-                /*case Linea:
+                case Linea:
                     lexico[0] = "<Linea>";
-                    lexico[1] = lexer.lexeme;
-                    resultado += "<Linea>\t\t" + lexer.lexeme + "\n";
-                    break;*/
+                    lexico[1] = "\n";
+                    break;
                 case P_RESERVADA:
                     lexico[0] = "<Palabra Reservada>";
                     lexico[1] = lexer.lexeme;
-                    resultado += "<Palabra Reservada>\t" + lexer.lexeme + "\n";
                     break;
                 case Void:
                     lexico[0] = "<Palabra Reservada>";
                     lexico[1] = lexer.lexeme;
-                    resultado += "<Palabra Reservada>\t" + lexer.lexeme + "\n";
                     break;
                 case Main:
                     lexico[0] = "<Palabra Reservada>";
                     lexico[1] = lexer.lexeme;
-                    resultado += "<Palabra Reservada>\t" + lexer.lexeme + "\n";
                     break;
                 case Op_ACCESO:
                     lexico[0] = "<Operador Acceso>";
                     lexico[1] = lexer.lexeme;
-                    resultado += "<Operador Acceso>\t" + lexer.lexeme + "\n";
                     break;
                 case Suma:
                     lexico[0] = "<Operador suma>";
                     lexico[1] = lexer.lexeme;
-                    resultado += "<Operador suma>\t" + lexer.lexeme + "\n";
                     break;
                 case Resta:
                     lexico[0] = "<Operador resta>";
                     lexico[1] = lexer.lexeme;
-                    resultado += "  <Operador resta>\t" + lexer.lexeme + "\n";
                     break;
                 case Multiplicacion:
                     lexico[0] = "<Operador multiplicacion>";
                     lexico[1] = lexer.lexeme;
-                    resultado += "<Operador multiplicacion>\t" + lexer.lexeme + "\n";
                     break;
                 case Division:
                     lexico[0] = "<Operador division>";
                     lexico[1] = lexer.lexeme;
-                    resultado += "<Operador division>\t" + lexer.lexeme + "\n";
                     break;
                 case ASIGNACION:
                     lexico[0] = "<Operador igual>";
                     lexico[1] = lexer.lexeme;
-                    resultado += "<Operador igual>\t" + lexer.lexeme + "\n";
                     break;
                 case Op_incremento:
                     lexico[0] = "<Operador incremento>";
                     lexico[1] = lexer.lexeme;
-                    resultado += "<Operador incremento>\t" + lexer.lexeme + "\n";
                     break;
                 case Op_disminucion:
                     lexico[0] = "<Operador disminucion>";
                     lexico[1] = lexer.lexeme;
-                    resultado += "<Operador disminucion>\t" + lexer.lexeme + "\n";
                     break;
                 case Op_atribucion:
                     lexico[0] = "<Operador atribucion>";
                     lexico[1] = lexer.lexeme;
-                    resultado += "<Operador atribucion>\t" + lexer.lexeme + "\n";
                     break;
                 case If:
                     lexico[0] = "<Reservada if>";
                     lexico[1] = lexer.lexeme;
-                    resultado += "<Reservada if>\t" + lexer.lexeme + "\n";
                     break;
                 case Else:
                     lexico[0] = "<Reservada else>";
                     lexico[1] = lexer.lexeme;
-                    resultado += "<Reservada else>\t" + lexer.lexeme + "\n";
                     break;
                 case Do:
                     lexico[0] = "<Reservada do>";
                     lexico[1] = lexer.lexeme;
-                    resultado += "<Reservada do>\t" + lexer.lexeme + "\n";
                     break;
                 case While:
                     lexico[0] = "<Reservada while>";
                     lexico[1] = lexer.lexeme;
-                    resultado += "<Reservada while>\t" + lexer.lexeme + "\n";
                     break;
                 case For:
                     lexico[0] = "<Reservada For>";
                     lexico[1] = lexer.lexeme;
-                    resultado += "<Reservada For>\t" + lexer.lexeme + "\n";
                     break;
                 case PUNTO:
                     lexico[0] = "<Punto>";
                     lexico[1] = lexer.lexeme;
-                    resultado += "<Punto>\t" + lexer.lexeme + "\n";
                     break;
                 case Op_DOS_PUNTOS:
                     lexico[0] = "<Dos Punto>";
                     lexico[1] = lexer.lexeme;
-                    resultado += "<Dos puntos>\t" + lexer.lexeme + "\n";
                     break;
                 case P_TERMINADOR:
                     lexico[0] = "<Punto y coma>";
                     lexico[1] = lexer.lexeme;
-                    resultado += "<Punto y coma>\t" + lexer.lexeme + "\n";
                     break;
                 case COMA:
                     lexico[0] = "<Coma>";
                     lexico[1] = lexer.lexeme;
-                    resultado += "<Coma>\t" + lexer.lexeme + "\n";
                     break;
                 case T_dato:
                     lexico[0] = "<Tipo de dato>";
                     lexico[1] = lexer.lexeme;
-                    resultado += "<Tipo de dato>\t" + lexer.lexeme + "\n";
                     break;
                 case Numero:
                     lexico[0] = "<Identificador Numero>";
                     lexico[1] = lexer.lexeme;
-                    resultado += "<Identificador Numero>\t" + lexer.lexeme + "\n";
                     break;
                 case Cadena:
                     lexico[0] = "<Identificador Cadena>";
                     lexico[1] = lexer.lexeme;
-                    resultado += "<Identificador Cadena\t" + lexer.lexeme + "\n";
                     break;
                 case Op_logico:
                     lexico[0] = "<Operador logico>";
                     lexico[1] = lexer.lexeme;
-                    resultado += "<Operador logico>\t" + lexer.lexeme + "\n";
                     break;
                 case Op_booleano:
                     lexico[0] = "<Operador booleano>";
                     lexico[1] = lexer.lexeme;
-                    resultado += "<Operador booleano>\t" + lexer.lexeme + "\n";
                     break;
                 case Op_relacional:
                     lexico[0] = "<Operador relacional>";
                     lexico[1] = lexer.lexeme;
-                    resultado += "<Operador relacional>\t" + lexer.lexeme + "\n";
                     break;
                 case Parentesis_a:
                     lexico[0] = "<Parentesis de apertura>";
                     lexico[1] = lexer.lexeme;
-                    resultado += "<Parentesis de apertura>\t" + lexer.lexeme + "\n";
                     break;
                 case Parentesis_c:
                     lexico[0] = "<Parentesis de cierre>";
                     lexico[1] = lexer.lexeme;
-                    resultado += "<Parentesis de cierre>\t" + lexer.lexeme + "\n";
                     break;
                 case Llave_a:
                     lexico[0] = "<Llave de apertura>";
                     lexico[1] = lexer.lexeme;
-                    resultado += "<Llave de apertura>\t" + lexer.lexeme + "\n";
                     break;
                 case Llave_c:
                     lexico[0] = "<Llave de cierre>";
                     lexico[1] = lexer.lexeme;
-                    resultado += "<Llave de cierre>\t" + lexer.lexeme + "\n";
                     break;
                 case Corchete_a:
                     lexico[0] = "<Corchete de cierre>";
                     lexico[1] = lexer.lexeme;
-                    resultado += "<Corchete de apertura>\t" + lexer.lexeme + "\n";
                     break;
                 case Corchete_c:
                     lexico[0] = "<Corchete de cierre>";
                     lexico[1] = lexer.lexeme;
-                    resultado += "<Corchete de cierre>\t" + lexer.lexeme + "\n";
                     break;
                 case ERROR:
                     lexico[0] = "<Simbolo no definido>";
                     lexico[1] = null;
-                    resultado += "<Simbolo no definido>\n";
-                    break;
-                default:
-                    resultado += "< " + lexer.lexeme + " >\n";
                     break;
             }
-            modelo.addRow(lexico);
-            TableSimbolos1.setModel(modelo);
+            tlexico.addRow(lexico);
         }
     }
 
-    private void BtnIfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnIfActionPerformed
-        If = "if(num<1){\n" + "	imprimir(\"Hola Melvin\");\n" + "}\n" + "else{\n" + "	imprimir(\"Adios Melvin\");\n" + "}";
-        txtInput.setText(If);
-    }//GEN-LAST:event_BtnIfActionPerformed
-
-    private void BtnWhileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnWhileActionPerformed
-        While = "while (a>1){\n imprimir(\"Ciclo While\");\n} ";
-        txtInput.setText(While);
-    }//GEN-LAST:event_BtnWhileActionPerformed
-
     private void BtnMostrarArbolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnMostrarArbolActionPerformed
-        //GENERAR ARBOL A PARTIR DE LOS NODOS
         try {
-            Nodo raiz = parser.padre; //VARIABLE raiz DEL TIPO NODO PADRE QUE SE ENCUENTRA EN EL PARSER
+            Nodo raiz = parser.padre;
             String resultado = recorrido(raiz);
             System.out.println("Resultados: " + resultado);
-            graficar(raiz); //LLAMAR AL TRADUCTOR DE GRAPHVIZ
+            graficar(raiz); 
         } catch (Exception e) {
             System.out.println("NO SE HA PODIDO GENERAR EL ARBOL " + e);
-        }
-        //LA IMAGEN ES LLAMADA CON EL VISOR POR DEFECTO DEL SISTEMA
-        try {
-            Desktop.getDesktop().open(new File("src/Salida/arbol.png"));
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Error al intentar abrir la imagen " + e);
         }
     }//GEN-LAST:event_BtnMostrarArbolActionPerformed
 
     private void BtnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnLimpiarActionPerformed
-        // TODO add your handling code here:
         txtInput.setText("");
         TxtErrorSint.setText("");
         /*Limpiar tabla*/
-        DefaultTableModel lexico = (DefaultTableModel) TableSimbolos1.getModel();
+        DefaultTableModel lexico = (DefaultTableModel) TableLexico.getModel();
         lexico.setRowCount(0);
         DefaultTableModel sintactico = (DefaultTableModel) TableSimbolos.getModel();
         sintactico.setRowCount(0);
         /*Vaciar Listas*/
         parser.PalabraReservada.clear();
         parser.Simbolo.clear();
-        parser.Cadenas.clear();        
-        parser.Variables.clear();        
-        parser.ValoresNumericos.clear();        
-        parser.Errores.clear();        
+        parser.Cadenas.clear();
+        parser.Variables.clear();
+        parser.ValoresNumericos.clear();
+        parser.Errores.clear();
+        conta = 0;
+        /*HashSet*/
+        palabras_r.clear();
+        identificador.clear();
+        cadenas.clear();
+        numerico.clear();
+        simbolo.clear();
     }//GEN-LAST:event_BtnLimpiarActionPerformed
 
     /**
@@ -699,18 +605,16 @@ public class GUI_Semantico extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnAnalziar;
-    private javax.swing.JButton BtnIf;
     private javax.swing.JButton BtnLimpiar;
     private javax.swing.JButton BtnMostrarArbol;
-    private javax.swing.JButton BtnWhile;
+    private javax.swing.JTable TableLexico;
     private javax.swing.JTable TableSimbolos;
-    private javax.swing.JTable TableSimbolos1;
     private javax.swing.JTextArea TxtErrorSint;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;

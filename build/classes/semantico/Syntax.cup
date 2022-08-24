@@ -58,9 +58,11 @@ terminal String Op_Logico, Op_Relacional, Op_Atribucion, Op_Incremento, Op_Dismi
 /*Llaves ETC*/
 terminal String Llave_a, Llave_c, Corchete_a, Corchete_c, Parentesis_a, Parentesis_c;
 
+/*Errores*/
+terminal ERROR_IDENTIFICADOR, ERROR_LITERAL;
+
 non terminal INICIO, SENTENCIAS, SENTENCIA, DECLARACION, DECLARACION_FOR, IF, IF_ELSE,
-    WHILE, DO_WHILE, FOR, SENTENCIA_BOOLEANA, SENTENCIA_FOR, EXPRE_NUMERICA,
-    EXPRE_CADENA, EXPRE_COMPARACION, EXPRE_LOGICA, INSTRUCCIONES, INSTRUCCION;
+    WHILE, DO_WHILE, FOR, SENTENCIA_BOOLEANA, SENTENCIA_FOR, EXPRE_CADENA, INSTRUCCION;
 
 precedence left Suma, Resta;
 precedence left Multiplicacion, Division; 
@@ -161,65 +163,6 @@ SENTENCIA ::=
     :}  | error
 ;
 
-EXPRE_NUMERICA  ::= 
-    Parentesis_a EXPRE_NUMERICA Parentesis_c
-  {:
-  		parser.Simbolo.add(" ( "); parser.Simbolo.add(" ) ");
-
-  :}
-
- |  entero:numEntero
-  {:
-    parser.ValoresNumericos.add(numEntero); 
-
-    Nodo tmp = new Nodo("ENTERO");
-    tmp.setIdNod(parser.contador++);
-    tmp.setValor(numEntero);
-    RESULT=tmp;
-
-  :}                                                 
- |  decimal:numDecimal
-  {:
-    parser.ValoresNumericos.add(numDecimal); 
-
-    Nodo tmp = new Nodo("DECIMAL");
-    tmp.setIdNod(parser.contador++);
-    tmp.setValor(numDecimal);
-    RESULT=tmp;
-
-  :}                                                  
- |  Identificador:identi
-  {:
-    parser.Variables.add(identi); 
-
-    Nodo tmp = new Nodo("IDENTIFICADOR");
-    tmp.setIdNod(parser.contador++);
-    tmp.setValor(identi);
-    RESULT=tmp;
-
-  :}     
-;
-
-EXPRE_CADENA::=     
-        cadena:texto
-    {:
-        parser.Cadenas.add(texto);
-
-        Nodo tmp = new Nodo("TEXTO");
-        tmp.setIdNod(parser.contador++);
-        tmp.setValor(texto);
-        RESULT=tmp;
-    :}
-        |  EXPRE_LOGICA:logica
-    {:
-        Nodo tmp = new Nodo("BOOLEAN");
-        tmp.setIdNod(parser.contador++);
-        tmp.AddHijos((Nodo) logica);
-        RESULT=tmp;
-    :}
-;
-
-
 INSTRUCCION ::= 
     INSTRUCCION DECLARACION |
     DECLARACION |
@@ -288,6 +231,18 @@ DECLARACION ::=
         tmp.setValor(d4);
         RESULT=tmp;
     :}
+    |   Identificador:idd Op_Atribucion:sa entero:num22 P_coma 
+    {:
+        parser.Variables.add(idd);
+        parser.Simbolo.add(sa); 
+        parser.ValoresNumericos.add(num22);
+        parser.Simbolo.add(" ; ");
+
+        Nodo tmp = new Nodo("NUMERICO");
+        tmp.setIdNod(parser.contador++);
+        tmp.setValor(num22);
+        RESULT=tmp;
+    :}
     |   T_Dato:d5 Identificador:id5 Op_Atribucion:sig2 decimal:dec2 P_coma  
     {:  
         parser.ValoresNumericos.add(d5);
@@ -351,6 +306,7 @@ DECLARACION ::=
     :}/*Cadena*/
     |   Cadena:txt1 Identificador:idc1 P_coma 
     {:
+        parser.PalabraReservada.add(txt1);
         parser.Cadenas.add(txt1);
         parser.Variables.add(idc1); 
         parser.Simbolo.add(" ; ");
@@ -362,6 +318,7 @@ DECLARACION ::=
     :}
     |   Cadena:txt2 Identificador:idc2 Igual cadena:nd1 P_coma 
     {:
+        parser.PalabraReservada.add(txt2);
         parser.Cadenas.add(txt2);
         parser.Variables.add(idc2); 
         parser.Simbolo.add(" = ");
@@ -375,6 +332,7 @@ DECLARACION ::=
     :}
     |   Cadena:txt3 Identificador:idc3 Op_Atribucion:opa cadena:nd2 P_coma 
     {:
+        parser.PalabraReservada.add(txt3);
         parser.Cadenas.add(txt3);
         parser.Variables.add(idc3); 
         parser.Simbolo.add(opa);
@@ -387,10 +345,66 @@ DECLARACION ::=
         RESULT=tmp;
     :}
 ;
+
+EXPRE_CADENA::=     
+        cadena:texto
+    {:
+        parser.Cadenas.add(texto);
+
+        Nodo tmp = new Nodo("TEXTO");
+        tmp.setIdNod(parser.contador++);
+        tmp.setValor(texto);
+        RESULT=tmp;
+    :}  
+    |   Comillas cadena:texto2 Comillas
+    {:  
+        parser.Simbolo.add(" \" ");
+        parser.Cadenas.add(texto2);
+        parser.Simbolo.add(" \" ");
+
+        Nodo tmp = new Nodo("TEXTO");
+        tmp.setIdNod(parser.contador++);
+        tmp.setValor(texto2);
+        RESULT=tmp;
+    :}
+;
+
 SENTENCIA_BOOLEANA ::= 
-    Bool Identificador P_coma | 
-    Bool Identificador Igual Op_Booleano P_coma |
-    Identificador Op_Relacional entero
+        Bool:b1 Identificador:id P_coma 
+    {:
+        parser.Simbolo.add(b1); 
+        parser.Variables.add(id); 
+        parser.Simbolo.add(" ; "); 
+       
+        Nodo tmp = new Nodo("BOOLEAN");
+        tmp.setIdNod(parser.contador++);
+        tmp.setValor(b1);
+        RESULT=tmp;
+    :}
+    |   Bool:b2 Identificador:id2 Igual Op_Booleano:op1 P_coma 
+    {:
+        parser.Simbolo.add(b2); 
+        parser.Variables.add(id2); 
+        parser.Simbolo.add(" = "); 
+        parser.Simbolo.add(op1); 
+        parser.Simbolo.add(" ; "); 
+       
+        Nodo tmp = new Nodo("BOOLEAN");
+        tmp.setIdNod(parser.contador++);
+        tmp.setValor(op1);
+        RESULT=tmp;
+    :}
+    |   Identificador:id3 Op_Relacional:opr entero:num
+    {:
+        parser.Variables.add(id3); 
+        parser.Simbolo.add(opr); 
+        parser.ValoresNumericos.add(num); 
+       
+        Nodo tmp = new Nodo("BOOLEAN");
+        tmp.setIdNod(parser.contador++);
+        tmp.setValor(opr);
+        RESULT=tmp;
+    :}
 ;
 
 IF ::= 
