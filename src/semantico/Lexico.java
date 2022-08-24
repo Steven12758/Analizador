@@ -10,7 +10,7 @@ import static lexico.Tokens.*;
  * on 22/08/22 11:49 from the specification file
  * <tt>/home/thend/Documentos/Analizador/src/lexico/Lexer.flex</tt>
  */
-class Lexer1 {
+class Lexico {
 
   /** This character denotes the end of file */
   public static final int YYEOF = -1;
@@ -328,7 +328,7 @@ class Lexer1 {
    *
    * @param   in  the java.io.Reader to read input from.
    */
-  Lexer1(java.io.Reader in) {
+  Lexico(java.io.Reader in) {
     this.zzReader = in;
   }
 
@@ -338,7 +338,7 @@ class Lexer1 {
    *
    * @param   in  the java.io.Inputstream to read input from.
    */
-  Lexer1(java.io.InputStream in) {
+  Lexico(java.io.InputStream in) {
     this(new java.io.InputStreamReader(in));
   }
 

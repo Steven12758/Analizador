@@ -14,7 +14,6 @@ parser code
     public Symbol getS(){
        return this.s;
     }
-
 :};
 
 terminal Linea, Comillas, T_dato, Int, Cadena, If, Else, Do, While, For,

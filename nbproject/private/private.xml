@@ -3,8 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/thend/Documentos/Analizador/src/lexico/Main.java</file>
-            <file>file:/home/thend/Documentos/Analizador/src/semantico/arbol/nodos/sentencias/NodoOp.java</file>
+            <file>file:/home/thend/Documentos/Analizador/src/sintactico/LexerCup.java</file>
+            <file>file:/home/thend/Documentos/Analizador/src/semantico/GUI_Semantico.java</file>
+            <file>file:/home/thend/Documentos/Analizador/src/semantico/main.java</file>
+            <file>file:/home/thend/Documentos/Analizador/src/semantico/Lexer.java</file>
+            <file>file:/home/thend/Documentos/Analizador/src/semantico/Lexico.java</file>
+            <file>file:/home/thend/Documentos/Analizador/src/sintactico/LexerCup.flex</file>
+            <file>file:/home/thend/Documentos/Analizador/src/semantico/Lexer.flex</file>
+            <file>file:/home/thend/Documentos/Analizador/src/sintactico/GUI_Sintactico.java</file>
         </group>
     </open-files>
 </project-private>

@@ -10,273 +10,159 @@ parser code
     public int contador=0;
 
     /*Listas*/
-    public static LinkedList<String> PalabraReservada = new LinkedList<String>();
-    public static LinkedList<String> Simbolo = new LinkedList<String>();
-    public static LinkedList<String> Cadenas = new LinkedList<String>();
-    public static LinkedList<String> Variables = new LinkedList<String>();
-    public static LinkedList<String> ValoresNumericos = new LinkedList<String>();
-    public static LinkedList<String> Errores = new LinkedList<String>();
-
-    /*Método al que se llama automáticamente ante algún error sintactico*/ 
+    public static LinkedList<String> PalabraReservada = new LinkedList<>();
+    public static LinkedList<String> Simbolo = new LinkedList<>();
+    public static LinkedList<String> Cadenas = new LinkedList<>();
+    public static LinkedList<String> Variables = new LinkedList<>();
+    public static LinkedList<String> ValoresNumericos = new LinkedList<>();
+    public static LinkedList<String> Errores = new LinkedList<>();
+    
+    /**
+     * Método al que se llama automáticamente ante algún error sintactico.
+     **/ 
     public void syntax_error(Symbol s){ 
-        System.err.println("Error Sintáctico en la Línea " + (s.left) +" Columna "+s.right+ ". No se esperaba este componente: " +s.value+".");
-        parser.Errores.add("Error Sintáctico en la Línea " + (s.left) +" Columna "+s.right+ ". No se esperaba este componente: " +s.value+". \n");
+            System.err.println("Error Sintáctico en la Línea " + (s.left) +" Columna "+s.right+ ". No se esperaba este componente: " +s.value+".");
+            parser.Errores.add("Error Sintáctico en la Línea " + (s.left) +" Columna "+s.right+ ". No se esperaba este componente: " +s.value+". \n");
     } 
 
-    /*Método al que se llama en el momento en que ya no es posible una recuperación de errores*/ 
+    /**
+     * Método al que se llama en el momento en que ya no es posible una recuperación de errores.
+     **/ 
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
-        System.err.println("Error síntactico irrecuperable en la Línea " + (s.left)+ " Columna "+s.right+". Componente " + s.value + " no reconocido."); 
-        parser.Errores.add("Error Sintáctico en la Línea " + (s.left) +" Columna "+s.right+ ". No se esperaba este componente: " +s.value+". \n");
+            System.err.println("Error síntactico irrecuperable en la Línea " + (s.left)+ " Columna "+s.right+". Componente " + s.value + " no reconocido."); 
+            parser.Errores.add("Error Sintáctico en la Línea " + (s.left) +" Columna "+s.right+ ". No se esperaba este componente: " +s.value+". \n");
     }  
-:} 
+:};
 
+/*Identificador*/
+terminal String Identificador;
 
-//PUNTUACION
-terminal String ptcoma,parizq,parder,llavizq,llavder;
-//OPERADORES
-terminal String menque,mayque,menoigual,mayoigual,cigual,diferente;
-terminal String and, or;
-//TIPOS DATOS
-terminal String entero;
-terminal String decimal;
-terminal String bool;
-terminal String cadena;
-terminal String rimprimir, rmientras, rif, relse;
-terminal String identificador;
+/*Puntuacion*/   
+terminal String Comillas, Punto, DosPuntos, P_coma;  
 
-non terminal INI;
-non terminal INSTRUCCIONES;
-non terminal INSTRUCCION;
-non terminal EXPRE_NUMERICA;
-non terminal EXPRE_CADENA;
-non terminal EXPRE_COMPARACION;
-non terminal EXPRE_LOGICA;
+/*Reservadas*/
+terminal String Main, Void, Op_Acceso;
 
-precedence left and;
-precedence left or; 
+/*Arimeticos*/
+terminal String Suma, Resta, Multiplicacion, Division, Igual;
 
-//ESPECIFICAR CON QUE NO TERMINAL EMPEZAR
-start with INI; 
+/*Datos*/
+terminal String T_Dato, entero, decimal, cadena, Bool, Cadena;
 
-INI::=INSTRUCCIONES:instr
-  {:
+/*Condicionales*/
+terminal String If, Else, Do, While, For;
 
-    Nodo nd = new Nodo("INICIO");
-    nd.setIdNod(parser.contador++);
-    nd.AddHijos((Nodo) instr);
-    parser.padre = (Nodo) nd;
+/*Operadores*/
+terminal String Op_Logico, Op_Relacional, Op_Atribucion, Op_Incremento, Op_Disminucion, Op_Booleano;
 
-      System.out.println("------------*************----------------");
-      System.out.println("Compilacion exitosa!");
-      System.out.println("------------*************----------------");
+/*Llaves ETC*/
+terminal String Llave_a, Llave_c, Corchete_a, Corchete_c, Parentesis_a, Parentesis_c;
 
-    RESULT = instr;
-  :}
+non terminal INICIO, SENTENCIAS, SENTENCIA, DECLARACION, DECLARACION_FOR, IF, IF_ELSE,
+    WHILE, DO_WHILE, FOR, SENTENCIA_BOOLEANA, SENTENCIA_FOR, EXPRE_NUMERICA,
+    EXPRE_CADENA, EXPRE_COMPARACION, EXPRE_LOGICA, INSTRUCCIONES, INSTRUCCION;
+
+precedence left Suma, Resta;
+precedence left Multiplicacion, Division; 
+
+/*Inicio*/
+start with INICIO; 
+
+INICIO::=SENTENCIAS:instr
+    {:
+        Nodo nd = new Nodo("INICIO");
+        nd.setIdNod(parser.contador++);
+        nd.AddHijos((Nodo) instr);
+        parser.padre = (Nodo) nd;
+
+        System.out.println("------------*************----------------");
+        System.out.println("Compilacion exitosa!");
+        System.out.println("------------*************----------------");
+
+        RESULT = instr;
+    :}
 ;
 
-INSTRUCCIONES ::= 
-	INSTRUCCIONES:s1 INSTRUCCION:s2
-  {:
-    Nodo tmp = new Nodo("INSTRUCCIONES");
-    tmp.setValor(" Lista_Instrucciones ");
-    tmp.setIdNod(parser.contador++);
-    tmp.AddHijos((Nodo) s1);
-    tmp.AddHijos((Nodo) s2);
+SENTENCIAS ::= 
+        SENTENCIAS:s1 SENTENCIA:s2
+    {:
+        Nodo tmp = new Nodo("SENTENCIAS");
+        tmp.setValor(" Lista Sentencias ");
+        tmp.setIdNod(parser.contador++);
+        tmp.AddHijos((Nodo) s1);
+        tmp.AddHijos((Nodo) s2);
 
-    System.out.println("NODOS RAIZ tmp: "+tmp.Etiqueta);
-    System.out.println("NODOS RAIZ s2: "+ ((Nodo)s2).getHijos());
-    RESULT=tmp;
-:}
+        System.out.println("NODOS RAIZ tmp: "+tmp.Etiqueta);
+        System.out.println("NODOS RAIZ s2: "+ ((Nodo)s2).getHijos());
+        RESULT=tmp;
+    :}
+        | SENTENCIA:s2
+    {:
+        Nodo tmp = new Nodo("SENTENCIA");
+        tmp.setValor(" Sentencia ");
+        tmp.setIdNod(parser.contador++);
+        tmp.AddHijos((Nodo) s2);
 
- | 	INSTRUCCION:s2
- {:
-    Nodo tmp = new Nodo("INSTRUCCION");
-    tmp.setValor(" Instruccion ");
-    tmp.setIdNod(parser.contador++);
-    tmp.AddHijos((Nodo) s2);
+        System.out.println("NODOS RAIZ tmp: " +tmp.Etiqueta);
+        System.out.println("NODOS RAIZ s2: " + ((Nodo)s2).getHijos());
 
-    System.out.println("NODOS RAIZ tmp: "+tmp.Etiqueta);
-    System.out.println("NODOS RAIZ s2: "+ ((Nodo)s2).getHijos());
-
-    RESULT=tmp;
-
-  :}
+        RESULT=tmp;
+    :}
 ; 
 
-INSTRUCCION ::= 
-   rimprimir:imprimir parizq EXPRE_CADENA:nd1 parder ptcoma
-   {:
+SENTENCIA ::= 
+        Op_Acceso:apublic Void:rvoid Main:main Parentesis_a EXPRE_CADENA:nd1 Parentesis_c Llave_a INSTRUCCION:nd2 Llave_c
+    {:
+        parser.PalabraReservada.add(apublic); 
+        parser.PalabraReservada.add(rvoid); 
+        parser.PalabraReservada.add(main); 
+        parser.Simbolo.add(" ( "); 
+        parser.Simbolo.add(" ) "); 
+        parser.Simbolo.add(" { ");
+        parser.Simbolo.add(" } ");
 
-   	  parser.PalabraReservada.add(imprimir); parser.Simbolo.add(" ( "); parser.Simbolo.add(" ) "); parser.Simbolo.add(" ; ");
+        Nodo nd = new Nodo("OPERADOR ACCESO");
+        nd.setValor(" operador acceso ");
+       
+        Nodo nv = new Nodo("Palabra Reservada");
+        nv.setValor(" void ");
+        nv.setIdNod(parser.contador++);
 
-      Nodo nd = new Nodo("IMPRIMIR");
-      nd.setValor(" imprimir ");
-      
-      Nodo sim = new Nodo("Simbolo");
-      sim.setValor(" ; ");
-      sim.setIdNod(parser.contador++);
+        Nodo nm = new Nodo("Palabra Reservada");
+        nm.setValor(" main ");
+        nm.setIdNod(parser.contador++);
 
-      Nodo para = new Nodo("Simbolo");
-      para.setValor(" ( ");
-      para.setIdNod(parser.contador++);
+        Nodo para = new Nodo("Simbolo");
+        para.setValor(" ( ");
+        para.setIdNod(parser.contador++);
 
-      Nodo parc = new Nodo("Simbolo");
-      parc.setValor(" ) ");
-      parc.setIdNod(parser.contador++);
+        Nodo parc = new Nodo("Simbolo");
+        parc.setValor(" ) ");
+        parc.setIdNod(parser.contador++);
 
-      
-      nd.AddHijos((Nodo) para);
-      nd.AddHijos((Nodo) nd1);
-      nd.AddHijos((Nodo) parc);
-      nd.AddHijos((Nodo) sim);
+        Nodo sim = new Nodo("Simbolo");
+        sim.setValor(" { ");
+        sim.setIdNod(parser.contador++);    
 
-      nd.setIdNod(parser.contador++);
-      
-      RESULT=nd;
-    :}
+        Nodo sim2 = new Nodo("Simbolo");
+        sim2.setValor(" } ");
+        sim2.setIdNod(parser.contador++);
 
- | rmientras:mientras parizq EXPRE_LOGICA:logica parder llavizq INSTRUCCIONES:nd1 llavder
- 	{:
+        nd.AddHijos((Nodo) para);
+        nd.AddHijos((Nodo) nv);
+        nd.AddHijos((Nodo) nm);
+        nd.AddHijos((Nodo) nd1);
+        nd.AddHijos((Nodo) parc);
+        nd.AddHijos((Nodo) sim);
+        nd.AddHijos((Nodo) sim2);
 
- 	  parser.PalabraReservada.add(mientras); parser.Simbolo.add(" ( "); parser.Simbolo.add(" ) "); parser.Simbolo.add(" ; "); parser.Simbolo.add(" { "); parser.Simbolo.add(" } ");
-
-      Nodo nd = new Nodo("CICLO");
-      nd.setValor(" while ");
-      
-      Nodo para = new Nodo("Simbolo");
-      para.setValor(" ( ");
-      para.setIdNod(parser.contador++);
-
-      Nodo parc = new Nodo("Simbolo");
-      parc.setValor(" ) ");
-      parc.setIdNod(parser.contador++);
-
-      Nodo lla = new Nodo("Simbolo");
-      lla.setValor(" { ");
-      lla.setIdNod(parser.contador++);
-
-      Nodo llc = new Nodo("Simbolo");
-      llc.setValor(" } ");
-      llc.setIdNod(parser.contador++);
-
-      
-      
-      nd.AddHijos((Nodo) para);
-      nd.AddHijos((Nodo) logica);
-      nd.AddHijos((Nodo) parc);
-      nd.AddHijos((Nodo) lla);
-      nd.AddHijos((Nodo) nd1);
-      nd.AddHijos((Nodo) llc);
-
-      nd.setIdNod(parser.contador++);
-
-      RESULT = nd;
-
- 	:}
-
- | rif:iff parizq EXPRE_LOGICA:logica parder llavizq INSTRUCCIONES:nd1 llavder
-   {:
-
-   	  parser.PalabraReservada.add(iff); parser.Simbolo.add(" ( "); parser.Simbolo.add(" ) "); parser.Simbolo.add(" { "); parser.Simbolo.add(" } ");
-
-      Nodo nd = new Nodo("CONDICIONAL");
-      nd.setValor(" if ");
-      
-      Nodo para = new Nodo("Simbolo");
-      para.setValor(" ( ");
-      para.setIdNod(parser.contador++);
-
-      Nodo parc = new Nodo("Simbolo");
-      parc.setValor(" ) ");
-      parc.setIdNod(parser.contador++);
-
-      Nodo lla = new Nodo("Simbolo");
-      lla.setValor(" { ");
-      lla.setIdNod(parser.contador++);
-
-      Nodo llc = new Nodo("Simbolo");
-      llc.setValor(" } ");
-      llc.setIdNod(parser.contador++);
-
-      
-      
-      nd.AddHijos((Nodo) para);
-      nd.AddHijos((Nodo) logica);
-      nd.AddHijos((Nodo) parc);
-      nd.AddHijos((Nodo) lla);
-      nd.AddHijos((Nodo) nd1);
-      nd.AddHijos((Nodo) llc);
-
-      nd.setIdNod(parser.contador++);
-
-      RESULT = nd;
-
- 	:}
-
- | rif:iff parizq EXPRE_LOGICA:logica parder llavizq INSTRUCCIONES:nd1 llavder  relse:elsee llavizq INSTRUCCIONES:nd2 llavder
- {:
-
- 	  parser.PalabraReservada.add(iff); parser.PalabraReservada.add(elsee); parser.Simbolo.add(" ( "); parser.Simbolo.add(" ) "); parser.Simbolo.add(" { "); parser.Simbolo.add(" } ");
-
-      Nodo nd = new Nodo("CONDICIONAL_SI_NO");
-      nd.setValor(" if ");
-      
-      Nodo para = new Nodo("Simbolo");
-      para.setValor(" ( ");
-      para.setIdNod(parser.contador++);
-
-      Nodo parc = new Nodo("Simbolo");
-      parc.setValor(" ) ");
-      parc.setIdNod(parser.contador++);
-
-      Nodo lla = new Nodo("Simbolo");
-      lla.setValor(" { ");
-      lla.setIdNod(parser.contador++);
-
-      Nodo llc = new Nodo("Simbolo");
-      llc.setValor(" } ");
-      llc.setIdNod(parser.contador++);
-
-      
-      
-      nd.AddHijos((Nodo) para);
-      nd.AddHijos((Nodo) logica);
-      nd.AddHijos((Nodo) parc);
-      nd.AddHijos((Nodo) lla);
-      nd.AddHijos((Nodo) nd1);
-      nd.AddHijos((Nodo) llc);
-
-      Nodo ndE = new Nodo("ELSE");
-      ndE.setValor(" else ");
-      nd.AddHijos((Nodo) ndE);
-
-      
-      Nodo lla2 = new Nodo("Simbolo");
-      lla2.setValor(" { ");
-      lla2.setIdNod(parser.contador++);
-
-      Nodo llc2 = new Nodo("Simbolo");
-      llc2.setValor(" } ");
-      llc2.setIdNod(parser.contador++);
-
-            
-      ndE.AddHijos((Nodo) lla2);
-      ndE.AddHijos((Nodo) nd2);
-      ndE.AddHijos((Nodo) llc2);
-
-      ndE.setIdNod(parser.contador++);
-      nd.setIdNod(parser.contador++);
-
-      RESULT = nd;
-
- 	:}
-
- | error
+        nd.setIdNod(parser.contador++);
+        RESULT=nd;
+    :}  | error
 ;
 
-
 EXPRE_NUMERICA  ::= 
-    parizq EXPRE_NUMERICA parder
+    Parentesis_a EXPRE_NUMERICA Parentesis_c
   {:
   		parser.Simbolo.add(" ( "); parser.Simbolo.add(" ) ");
 
@@ -302,7 +188,7 @@ EXPRE_NUMERICA  ::=
     RESULT=tmp;
 
   :}                                                  
- |  identificador:identi
+ |  Identificador:identi
   {:
     parser.Variables.add(identi); 
 
@@ -314,176 +200,393 @@ EXPRE_NUMERICA  ::=
   :}     
 ;
 
-EXPRE_CADENA::= 
-	cadena:texto
-  {:
-    parser.Cadenas.add(texto);
-
-    Nodo tmp = new Nodo("TEXTO");
-    tmp.setIdNod(parser.contador++);
-    tmp.setValor(texto);
-    RESULT=tmp;
-
-  :}
- |  EXPRE_LOGICA:logica
- {:
-
-    Nodo tmp = new Nodo("BOOLEAN");
-    tmp.setIdNod(parser.contador++);
-    tmp.AddHijos((Nodo) logica);
-    RESULT=tmp;
-
- :}
-;
-
-EXPRE_COMPARACION  ::= 
-   EXPRE_NUMERICA:s1  mayque    EXPRE_NUMERICA:s2
-   {:
-
-   	parser.Simbolo.add(" > ");
-
-    Nodo tmp = new Nodo("COMPARACION");
-    tmp.setIdNod(parser.contador++);
-    tmp.setValor(" > ");
-    
-    tmp.AddHijos((Nodo) s1);
-    tmp.AddHijos((Nodo) s2);
-
-    RESULT=tmp;
-
- :}
-
- | EXPRE_NUMERICA:s1  menque    EXPRE_NUMERICA:s2
- {:
-
- 	parser.Simbolo.add(" < ");
-
-    Nodo tmp = new Nodo("COMPARACION");
-    tmp.setIdNod(parser.contador++);
-    tmp.setValor(" < ");
-    
-    tmp.AddHijos((Nodo) s1);
-    tmp.AddHijos((Nodo) s2);
-
-    RESULT=tmp;
-
- :}
-
- | EXPRE_NUMERICA:s1  mayoigual EXPRE_NUMERICA:s2
- {:
-
- 	parser.Simbolo.add(" >= ");
-
-    Nodo tmp = new Nodo("COMPARACION");
-    tmp.setIdNod(parser.contador++);
-    tmp.setValor(" >= ");
-    
-    tmp.AddHijos((Nodo) s1);
-    tmp.AddHijos((Nodo) s2);
-
-    RESULT=tmp;
-
- :}
-
- | EXPRE_NUMERICA:s1  menoigual EXPRE_NUMERICA:s2
- {:
-
- 	parser.Simbolo.add(" >= ");
-
-    Nodo tmp = new Nodo("COMPARACION");
-    tmp.setIdNod(parser.contador++);
-    tmp.setValor(" <= ");
-    
-    tmp.AddHijos((Nodo) s1);
-    tmp.AddHijos((Nodo) s2);
-
-    RESULT=tmp;
-
- :}
-
- | EXPRE_NUMERICA:s1  cigual    EXPRE_NUMERICA:s2
- {:
-
- 	parser.Simbolo.add(" == ");
-
-    Nodo tmp = new Nodo("COMPARACION");
-    tmp.setIdNod(parser.contador++);
-    tmp.setValor(" == ");
-    
-    tmp.AddHijos((Nodo) s1);
-    tmp.AddHijos((Nodo) s2);
-
-    RESULT=tmp;
-
- :}
-
- | EXPRE_NUMERICA:s1  diferente EXPRE_NUMERICA:s2
- {:
-
- 	parser.Simbolo.add(" != ");
-
-    Nodo tmp = new Nodo("COMPARACION");
-    tmp.setIdNod(parser.contador++);
-    tmp.setValor(" != ");
-
-    tmp.AddHijos((Nodo) s1);
-    tmp.AddHijos((Nodo) s2);
-
-    RESULT=tmp;
-
- :}
-
- | bool:logica
- {:
-
- 	parser.Simbolo.add(logica);
-
-    Nodo tmp = new Nodo("BOOLEAN");
-    tmp.setIdNod(parser.contador++);
-    tmp.setValor(logica);
-    RESULT=tmp;
-
- :}
-
- | EXPRE_NUMERICA                              
-;
-
-EXPRE_LOGICA ::=
-    EXPRE_LOGICA:s1 or EXPRE_LOGICA:s2
+EXPRE_CADENA::=     
+        cadena:texto
     {:
+        parser.Cadenas.add(texto);
 
-    Nodo tmp = new Nodo("LOGICA");
-    tmp.setIdNod(parser.contador++);
-    tmp.setValor(" or ");
-    
-    tmp.AddHijos((Nodo) s1);
-    tmp.AddHijos((Nodo) s2);
-
-    RESULT=tmp;
-
- :}
-
-  | EXPRE_LOGICA:s1 and EXPRE_LOGICA:s2
-  {:
-
-    Nodo tmp = new Nodo("LOGICA");
-    tmp.setIdNod(parser.contador++);
-    tmp.setValor(" and ");
-    
-    tmp.AddHijos((Nodo) s1);
-    tmp.AddHijos((Nodo) s2);
-
-    RESULT=tmp;
-
- :}
-
-  | EXPRE_COMPARACION:comparacion
-  {:
-
-    Nodo tmp = new Nodo("EXPRESION");
-    tmp.setIdNod(parser.contador++);
-    tmp.AddHijos((Nodo) comparacion);
-    RESULT=tmp;
-
-  	:}
+        Nodo tmp = new Nodo("TEXTO");
+        tmp.setIdNod(parser.contador++);
+        tmp.setValor(texto);
+        RESULT=tmp;
+    :}
+        |  EXPRE_LOGICA:logica
+    {:
+        Nodo tmp = new Nodo("BOOLEAN");
+        tmp.setIdNod(parser.contador++);
+        tmp.AddHijos((Nodo) logica);
+        RESULT=tmp;
+    :}
 ;
+
+
+INSTRUCCION ::= 
+    INSTRUCCION DECLARACION |
+    DECLARACION |
+    INSTRUCCION IF | 
+    IF |
+    INSTRUCCION IF_ELSE |
+    IF_ELSE |
+    INSTRUCCION WHILE |
+    WHILE |
+    INSTRUCCION DO_WHILE
+    DO_WHILE |
+    INSTRUCCION FOR |
+    FOR |
+    DECLARACION_FOR| 
+    SENTENCIA_BOOLEANA
+;
+
+DECLARACION ::= 
+        T_Dato:d1 Identificador:id1 P_coma 
+    {:
+        parser.ValoresNumericos.add(d1);
+        parser.Variables.add(id1);
+        parser.Simbolo.add(" ; "); 
+
+        Nodo tmp = new Nodo("NUMERICO");
+        tmp.setIdNod(parser.contador++);
+        tmp.setValor(d1);
+        RESULT=tmp;
+    :}
+    |   T_Dato:d2 Identificador:id2 Igual entero:num1 P_coma  
+    {:
+        parser.ValoresNumericos.add(d2);
+        parser.ValoresNumericos.add(num1);
+        parser.Variables.add(id2);
+        parser.Simbolo.add(" = "); 
+        parser.Simbolo.add(" ; "); 
+
+        Nodo tmp = new Nodo("NUMERICO");
+        tmp.setIdNod(parser.contador++);
+        tmp.setValor(d2);
+        RESULT=tmp;
+    :}
+    |   T_Dato:d3 Identificador:id3 Igual decimal:dec1 P_coma 
+    {:
+        parser.ValoresNumericos.add(d3);
+        parser.ValoresNumericos.add(dec1);
+        parser.Variables.add(id3);
+        parser.Simbolo.add(" = "); 
+        parser.Simbolo.add(" ; "); 
+        
+        Nodo tmp = new Nodo("NUMERICO");
+        tmp.setIdNod(parser.contador++);
+        tmp.setValor(d3);
+        RESULT=tmp;
+    :}/*Asignacion*/
+    |   T_Dato:d4 Identificador:id4 Op_Atribucion:sig1 entero:num2 P_coma 
+    {:
+        parser.ValoresNumericos.add(d4);
+        parser.ValoresNumericos.add(num2);
+        parser.Variables.add(id4);
+        parser.Simbolo.add(sig1); 
+        parser.Simbolo.add(" ; ");
+
+        Nodo tmp = new Nodo("NUMERICO");
+        tmp.setIdNod(parser.contador++);
+        tmp.setValor(d4);
+        RESULT=tmp;
+    :}
+    |   T_Dato:d5 Identificador:id5 Op_Atribucion:sig2 decimal:dec2 P_coma  
+    {:  
+        parser.ValoresNumericos.add(d5);
+        parser.ValoresNumericos.add(dec2);
+        parser.Variables.add(id5);
+        parser.Simbolo.add(sig2); 
+        parser.Simbolo.add(" ; ");
+
+        Nodo tmp = new Nodo("NUMERICO");
+        tmp.setIdNod(parser.contador++);
+        tmp.setValor(d5);
+        RESULT=tmp;
+    :}
+    |   T_Dato:d6 Identificador:id6 Op_Incremento:op1 P_coma 
+    {:
+        parser.ValoresNumericos.add(d6);
+        parser.Variables.add(id6);
+        parser.Simbolo.add(op1); 
+        parser.Simbolo.add(" ; ");
+
+        Nodo tmp = new Nodo("NUMERICO");
+        tmp.setIdNod(parser.contador++);
+        tmp.setValor(d6);
+        RESULT=tmp;
+    :}
+    |   T_Dato:d7 Identificador:id7 Op_Disminucion:op2 P_coma 
+    {:
+        parser.ValoresNumericos.add(d7);
+        parser.Variables.add(id7);
+        parser.Simbolo.add(op2); 
+        parser.Simbolo.add(" ; ");
+
+        Nodo tmp = new Nodo("NUMERICO");
+        tmp.setIdNod(parser.contador++);
+        tmp.setValor(d7);
+        RESULT=tmp;
+    :}
+    |   T_Dato:d8 Op_Incremento:op3 Identificador:id8 P_coma 
+    {:
+        parser.ValoresNumericos.add(d8);
+        parser.Simbolo.add(op3); 
+        parser.Variables.add(id8);
+        parser.Simbolo.add(" ; ");
+
+        Nodo tmp = new Nodo("NUMERICO");
+        tmp.setIdNod(parser.contador++);
+        tmp.setValor(d8);
+        RESULT=tmp;
+    :}
+    |   T_Dato:d9 Op_Disminucion:op4 Identificador:id9 P_coma 
+    {:
+        parser.ValoresNumericos.add(d9);
+        parser.Simbolo.add(op4); 
+        parser.Variables.add(id9);
+        parser.Simbolo.add(" ; ");
+
+        Nodo tmp = new Nodo("NUMERICO");
+        tmp.setIdNod(parser.contador++);
+        tmp.setValor(d9);
+        RESULT=tmp;
+    :}/*Cadena*/
+    |   Cadena:txt1 Identificador:idc1 P_coma 
+    {:
+        parser.Cadenas.add(txt1);
+        parser.Variables.add(idc1); 
+        parser.Simbolo.add(" ; ");
+        
+        Nodo tmp = new Nodo("TEXTO");
+        tmp.setIdNod(parser.contador++);
+        tmp.setValor(txt1);
+        RESULT=tmp;
+    :}
+    |   Cadena:txt2 Identificador:idc2 Igual cadena:nd1 P_coma 
+    {:
+        parser.Cadenas.add(txt2);
+        parser.Variables.add(idc2); 
+        parser.Simbolo.add(" = ");
+        parser.Cadenas.add(nd1);
+        parser.Simbolo.add(" ; ");
+
+        Nodo tmp = new Nodo("TEXTO");
+        tmp.setIdNod(parser.contador++);
+        tmp.setValor(txt2);
+        RESULT=tmp;
+    :}
+    |   Cadena:txt3 Identificador:idc3 Op_Atribucion:opa cadena:nd2 P_coma 
+    {:
+        parser.Cadenas.add(txt3);
+        parser.Variables.add(idc3); 
+        parser.Simbolo.add(opa);
+        parser.Cadenas.add(nd2);
+        parser.Simbolo.add(" ; ");
+
+        Nodo tmp = new Nodo("TEXTO");
+        tmp.setIdNod(parser.contador++);
+        tmp.setValor(txt3);
+        RESULT=tmp;
+    :}
+;
+SENTENCIA_BOOLEANA ::= 
+    Bool Identificador P_coma | 
+    Bool Identificador Igual Op_Booleano P_coma |
+    Identificador Op_Relacional entero
+;
+
+IF ::= 
+        If:sim Parentesis_a SENTENCIA_BOOLEANA:logica Parentesis_c Llave_a INSTRUCCION:nd1 Llave_c
+    {:
+        parser.PalabraReservada.add(sim); 
+        parser.Simbolo.add(" ( "); 
+        parser.Simbolo.add(" ) "); 
+        parser.Simbolo.add(" { "); 
+        parser.Simbolo.add(" } ");
+
+        Nodo nd = new Nodo("CONDICIONAL");
+        nd.setValor(" if ");
+
+        Nodo conIf = new Nodo("Simbolo");
+        conIf.setValor(" ( ");
+        conIf.setIdNod(parser.contador++);
+
+        Nodo parc = new Nodo("Simbolo");
+        parc.setValor(" ) ");
+        parc.setIdNod(parser.contador++);
+
+        Nodo lla = new Nodo("Simbolo");
+        lla.setValor(" { ");
+        lla.setIdNod(parser.contador++);
+
+        Nodo llc = new Nodo("Simbolo");
+        llc.setValor(" } ");
+        llc.setIdNod(parser.contador++);
+
+        nd.AddHijos((Nodo) conIf);
+        nd.AddHijos((Nodo) logica);
+        nd.AddHijos((Nodo) parc);
+        nd.AddHijos((Nodo) lla);
+        nd.AddHijos((Nodo) nd1);
+        nd.AddHijos((Nodo) llc);
+
+        nd.setIdNod(parser.contador++);
+        RESULT = nd;
+    :}
+;
+
+IF_ELSE ::= 
+        If:sim Parentesis_a SENTENCIA_BOOLEANA:logica Parentesis_c Llave_a INSTRUCCION:nd1 Llave_c Else Llave_a INSTRUCCION:nd2 Llave_c
+    {:
+        parser.PalabraReservada.add(sim); 
+        parser.Simbolo.add(" ( "); 
+        parser.Simbolo.add(" ) "); 
+        parser.Simbolo.add(" { "); 
+        parser.Simbolo.add(" } ");
+
+        Nodo nd = new Nodo("CONDICIONAL_SI_NO");
+        nd.setValor(" if ");
+
+        Nodo para = new Nodo("Simbolo");
+        para.setValor(" ( ");
+        para.setIdNod(parser.contador++);
+
+        Nodo parc = new Nodo("Simbolo");
+        parc.setValor(" ) ");
+        parc.setIdNod(parser.contador++);
+
+        Nodo lla = new Nodo("Simbolo");
+        lla.setValor(" { ");
+        lla.setIdNod(parser.contador++);
+
+        Nodo llc = new Nodo("Simbolo");
+        llc.setValor(" } ");
+        llc.setIdNod(parser.contador++);
+
+        nd.AddHijos((Nodo) para);
+        nd.AddHijos((Nodo) logica);
+        nd.AddHijos((Nodo) parc);
+        nd.AddHijos((Nodo) lla);
+        nd.AddHijos((Nodo) nd1);
+        nd.AddHijos((Nodo) llc);
+
+        Nodo ndE = new Nodo("ELSE");
+        ndE.setValor(" else ");
+        nd.AddHijos((Nodo) ndE);
+
+        Nodo lla2 = new Nodo("Simbolo");
+        lla2.setValor(" { ");
+        lla2.setIdNod(parser.contador++);
+
+        Nodo llc2 = new Nodo("Simbolo");
+        llc2.setValor(" } ");
+        llc2.setIdNod(parser.contador++);
+
+        ndE.AddHijos((Nodo) lla2);
+        ndE.AddHijos((Nodo) nd2);
+        ndE.AddHijos((Nodo) llc2);
+
+        ndE.setIdNod(parser.contador++);
+        nd.setIdNod(parser.contador++);
+        RESULT = nd;
+    :}
+;
+
+WHILE ::= 
+        While:mientras Parentesis_a SENTENCIA_BOOLEANA:logica Parentesis_c Llave_a INSTRUCCION:nd1 Llave_c
+    {:
+ 	parser.PalabraReservada.add(mientras); 
+        parser.Simbolo.add(" ( "); 
+        parser.Simbolo.add(" ) "); 
+        parser.Simbolo.add(" ; "); 
+        parser.Simbolo.add(" { "); 
+        parser.Simbolo.add(" } ");
+
+        Nodo nd = new Nodo("CICLO");
+        nd.setValor(" while ");
+
+        Nodo para = new Nodo("Simbolo");
+        para.setValor(" ( ");
+        para.setIdNod(parser.contador++);
+
+        Nodo parc = new Nodo("Simbolo");
+        parc.setValor(" ) ");
+        parc.setIdNod(parser.contador++);
+
+        Nodo lla = new Nodo("Simbolo");
+        lla.setValor(" { ");
+        lla.setIdNod(parser.contador++);
+
+        Nodo llc = new Nodo("Simbolo");
+        llc.setValor(" } ");
+        llc.setIdNod(parser.contador++);
+
+        nd.AddHijos((Nodo) para);
+        nd.AddHijos((Nodo) logica);
+        nd.AddHijos((Nodo) parc);
+        nd.AddHijos((Nodo) lla);
+        nd.AddHijos((Nodo) nd1);
+        nd.AddHijos((Nodo) llc);
+
+        nd.setIdNod(parser.contador++);
+        RESULT = nd;
+    :}
+;
+
+FOR ::= 
+    For:var Parentesis_a SENTENCIA_FOR:logica Parentesis_c Llave_a INSTRUCCION:nd1 Llave_c
+    {:
+ 	parser.PalabraReservada.add(var); 
+        parser.Simbolo.add(" ( "); 
+        parser.Simbolo.add(" ) "); 
+        parser.Simbolo.add(" ; "); 
+        parser.Simbolo.add(" { "); 
+        parser.Simbolo.add(" } ");
+
+        Nodo nd = new Nodo("CICLO");
+        nd.setValor(" for ");
+
+        Nodo para = new Nodo("Simbolo");
+        para.setValor(" ( ");
+        para.setIdNod(parser.contador++);
+
+        Nodo parc = new Nodo("Simbolo");
+        parc.setValor(" ) ");
+        parc.setIdNod(parser.contador++);
+
+        Nodo lla = new Nodo("Simbolo");
+        lla.setValor(" { ");
+        lla.setIdNod(parser.contador++);
+
+        Nodo llc = new Nodo("Simbolo");
+        llc.setValor(" } ");
+        llc.setIdNod(parser.contador++);
+
+        nd.AddHijos((Nodo) para);
+        nd.AddHijos((Nodo) logica);
+        nd.AddHijos((Nodo) parc);
+        nd.AddHijos((Nodo) lla);
+        nd.AddHijos((Nodo) nd1);
+        nd.AddHijos((Nodo) llc);
+
+        nd.setIdNod(parser.contador++);
+        RESULT = nd;
+    :}
+;
+    
+SENTENCIA_FOR ::=
+    T_Dato Identificador Igual entero P_coma SENTENCIA_BOOLEANA P_coma DECLARACION_FOR 
+;
+
+DECLARACION_FOR ::= 
+        Identificador:id1 Op_Incremento:op1
+    {:
+        parser.Variables.add(id1); 
+        parser.Simbolo.add(op1);
+
+        Nodo tmp = new Nodo("CICLO");
+        tmp.setIdNod(parser.contador++);
+        tmp.setValor(id1);
+        RESULT=tmp;
+    :}
+;
+
+

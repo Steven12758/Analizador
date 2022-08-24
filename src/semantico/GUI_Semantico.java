@@ -11,6 +11,8 @@ import java.io.StringReader;
 import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java_cup.runtime.Scanner;
+import java_cup.runtime.Symbol;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -73,7 +75,7 @@ public class GUI_Semantico extends javax.swing.JFrame {
 
         txtInput.setColumns(20);
         txtInput.setRows(5);
-        txtInput.setText("imprimir(\"Hola Melvin\");\nimprimir(\"Adios Melvin\");\n");
+        txtInput.setText("apublic rvoid main(\"expresion\"){\n\"ejemplo\"\n}");
         jScrollPane1.setViewportView(txtInput);
 
         jLabel2.setFont(new java.awt.Font("Comic Sans MS", 0, 24)); // NOI18N
@@ -253,22 +255,21 @@ public class GUI_Semantico extends javax.swing.JFrame {
     private void BtnAnalziarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAnalziarActionPerformed
         String ST = txtInput.getText();
         try {
+            new parser((Scanner) new Lexer(new BufferedReader(new StringReader(ST)))).parse();
             analizarLexico();
-            new parser(new Lexer(new BufferedReader(new StringReader(ST)))).parse();
             mostrarListas();
             TxtErrorSint.setText("Analisis realizado correctamente");
             TxtErrorSint.setForeground(new Color(25, 111, 61));
         } catch (Exception ex) {
             System.out.println("RESULTADO: NO SE HA PODIDO COMPILAR");
+            System.out.println(parser.Errores);
+            TxtErrorSint.setText("RESULTADO: NO SE HA PODIDO COMPILAR");
             TxtErrorSint.setText("" + parser.Errores);
             TxtErrorSint.setForeground(Color.red);
-            Logger.getLogger(GUI_Semantico.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_BtnAnalziarActionPerformed
 
-    //LISTAS PARA GENERAR TABLA DE SIMBOLOS
     public void mostrarListas() {
-        //ELIMINAR DUPLICADOS CON HasSet, se le pasa la lista, se limpia la lista antigua y luego se recarga la nueva lista
         // TOKEN - PR - IDENTIFICADOR - CADENA - NUMERO - SIMBOLO - TIPO
         //PALABRAS RESERVADAS
         HashSet<String> hashSet = new HashSet<>(parser.PalabraReservada);
@@ -285,12 +286,10 @@ public class GUI_Semantico extends javax.swing.JFrame {
             ts[conta][6] = "";
             conta++;
         }
-
         //VALORES VARIABLES
         HashSet<String> hashSet5 = new HashSet<>(parser.Variables);
         parser.Variables.clear();
         parser.Variables.addAll(hashSet5);
-
         for (String cadena : parser.Variables) {
             System.out.println(conta + " Variables: " + cadena);
             ts[conta][0] = conta + ". " + cadena;
@@ -303,13 +302,11 @@ public class GUI_Semantico extends javax.swing.JFrame {
             ts[conta][6] = "";
             conta++;
         }
-
         // TOKEN - PR - IDENTIFICADOR - CADENA - NUMERO - SIMBOLO - TIPO
         //CADENAS
         HashSet<String> hashSet3 = new HashSet<>(parser.Cadenas);
         parser.Cadenas.clear();
         parser.Cadenas.addAll(hashSet3);
-
         for (String cadena : parser.Cadenas) {
             System.out.println(conta + " Cadena: " + cadena);
             ts[conta][0] = conta + ". " + cadena;
@@ -321,24 +318,21 @@ public class GUI_Semantico extends javax.swing.JFrame {
             ts[conta][5] = "";
             conta++;
         }
-
         //VALORES NUMÉRICOS
         HashSet<String> hashSet4 = new HashSet<>(parser.ValoresNumericos);
         parser.ValoresNumericos.clear();
         parser.ValoresNumericos.addAll(hashSet4);
-
         for (String cadena : parser.ValoresNumericos) {
             System.out.println(conta + " Valores numéricos: " + cadena);
             ts[conta][0] = conta + ". " + cadena;
             ts[conta][4] = "x";
-            ts[conta][6] = "Float";
+            ts[conta][6] = "Numerico";
             ts[conta][2] = "";
             ts[conta][3] = "";
             ts[conta][1] = "";
             ts[conta][5] = "";
             conta++;
         }
-
         //SIMBOLOS
         HashSet<String> hashSet2 = new HashSet<>(parser.Simbolo);
         parser.Simbolo.clear();
@@ -382,7 +376,6 @@ public class GUI_Semantico extends javax.swing.JFrame {
         String cuerpo = "";
         for (Nodo hijos : raiz.getHijos()) {
             cuerpo += "\"" + raiz.getIdNod() + "." + raiz.getEtiqueta() + "=" + raiz.getValor() + "\"->\"" + hijos.getIdNod() + "." + hijos.getEtiqueta() + "=" + hijos.getValor() + "\"";
-            //System.out.println("Cuerpo: " + cuerpo);
             cuerpo += recorrido(hijos);
         }
         return cuerpo;
@@ -393,7 +386,6 @@ public class GUI_Semantico extends javax.swing.JFrame {
         FileWriter archivo = null;
         PrintWriter pw = null;
         String cadena = recorrido(raiz);
-
         try {
             archivo = new FileWriter("src/Salida/arbol.dot");
             pw = new PrintWriter(archivo);
@@ -405,7 +397,6 @@ public class GUI_Semantico extends javax.swing.JFrame {
         } catch (IOException e) {
             System.out.println(e + " 1");
         }
-
         try {
             String dotPath = "c:\\Program Files (x86)\\Graphviz2.38\\bin\\dot.exe"; //RUTA DE GRAPHVIZ
             String cmd = dotPath + " -Tpng src/Salida/arbol.dot -o src/Salida/arbol.png";
@@ -413,7 +404,6 @@ public class GUI_Semantico extends javax.swing.JFrame {
         } catch (IOException ioe) {
             System.out.println(ioe + " 2");
         }
-
     }
 
     private void analizarLexico() throws IOException {
@@ -422,7 +412,7 @@ public class GUI_Semantico extends javax.swing.JFrame {
         Object[] lexico = new Object[2];
 
         String expr = (String) txtInput.getText();
-        Lexer1 lexer = new Lexer1(new StringReader(expr));
+        Lexico lexer = new Lexico(new StringReader(expr));
         String resultado = "SENTENCIA" + "\t\tSIMBOLO\n";
         while (true) {
             lexico.Tokens token = lexer.yylex();
@@ -441,11 +431,11 @@ public class GUI_Semantico extends javax.swing.JFrame {
                     lexico[1] = lexer.lexeme;
                     resultado += "<Comillas>\t\t" + lexer.lexeme + "\n";
                     break;
-                case Linea:
+                /*case Linea:
                     lexico[0] = "<Linea>";
                     lexico[1] = lexer.lexeme;
                     resultado += "<Linea>\t\t" + lexer.lexeme + "\n";
-                    break;
+                    break;*/
                 case P_RESERVADA:
                     lexico[0] = "<Palabra Reservada>";
                     lexico[1] = lexer.lexeme;
@@ -592,7 +582,7 @@ public class GUI_Semantico extends javax.swing.JFrame {
                     resultado += "<Parentesis de cierre>\t" + lexer.lexeme + "\n";
                     break;
                 case Llave_a:
-                    lexico[0] = "<Llave de cierre>";
+                    lexico[0] = "<Llave de apertura>";
                     lexico[1] = lexer.lexeme;
                     resultado += "<Llave de apertura>\t" + lexer.lexeme + "\n";
                     break;
@@ -645,7 +635,6 @@ public class GUI_Semantico extends javax.swing.JFrame {
         } catch (Exception e) {
             System.out.println("NO SE HA PODIDO GENERAR EL ARBOL " + e);
         }
-
         //LA IMAGEN ES LLAMADA CON EL VISOR POR DEFECTO DEL SISTEMA
         try {
             Desktop.getDesktop().open(new File("src/Salida/arbol.png"));
@@ -663,6 +652,13 @@ public class GUI_Semantico extends javax.swing.JFrame {
         lexico.setRowCount(0);
         DefaultTableModel sintactico = (DefaultTableModel) TableSimbolos.getModel();
         sintactico.setRowCount(0);
+        /*Vaciar Listas*/
+        parser.PalabraReservada.clear();
+        parser.Simbolo.clear();
+        parser.Cadenas.clear();        
+        parser.Variables.clear();        
+        parser.ValoresNumericos.clear();        
+        parser.Errores.clear();        
     }//GEN-LAST:event_BtnLimpiarActionPerformed
 
     /**

@@ -37,7 +37,7 @@ public enum Tokens {
     /*Puntos y Terminador*/
     PUNTO("Operador punto"),
     Op_DOS_PUNTOS("Operador dos puntos"),
-    P_TERMINADOR("Operadors punto y coma"),
+    P_TERMINADOR("Operador punto y coma"),
     COMA("Operador coma"),
     
     /*Tipo Datos*/

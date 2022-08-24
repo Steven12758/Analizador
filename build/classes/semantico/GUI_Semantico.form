@@ -145,7 +145,7 @@
           <Properties>
             <Property name="columns" type="int" value="20"/>
             <Property name="rows" type="int" value="5"/>
-            <Property name="text" type="java.lang.String" value="imprimir(&quot;Hola Melvin&quot;);&#xa;imprimir(&quot;Adios Melvin&quot;);&#xa;"/>
+            <Property name="text" type="java.lang.String" value="apublic rvoid main(&quot;expresion&quot;){&#xa;&quot;ejemplo&quot;&#xa;}"/>
           </Properties>
         </Component>
       </SubComponents>
