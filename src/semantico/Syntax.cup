@@ -113,7 +113,7 @@ SENTENCIAS ::=
 ; 
 
 SENTENCIA ::= 
-        Op_Acceso:apublic Void:rvoid Main:main Parentesis_a EXPRE_CADENA:nd1 Parentesis_c Llave_a INSTRUCCION:nd2 Llave_c
+        Op_Acceso:apublic Void:rvoid Main:main Parentesis_a INSTRUCCION:nd1 Parentesis_c Llave_a INSTRUCCION:nd2 Llave_c
     {:
         parser.PalabraReservada.add(apublic); 
         parser.PalabraReservada.add(rvoid); 
@@ -153,7 +153,6 @@ SENTENCIA ::=
         nd.AddHijos((Nodo) para);
         nd.AddHijos((Nodo) nv);
         nd.AddHijos((Nodo) nm);
-        nd.AddHijos((Nodo) nd1);
         nd.AddHijos((Nodo) parc);
         nd.AddHijos((Nodo) sim);
         nd.AddHijos((Nodo) sim2);
@@ -344,6 +343,18 @@ DECLARACION ::=
         tmp.setValor(txt3);
         RESULT=tmp;
     :}
+    |   Cadena:txt4 Corchete_a Corchete_c Identificador:idc4
+    {:
+        parser.PalabraReservada.add(txt4);
+        parser.Simbolo.add(" [ ");
+        parser.Simbolo.add(" ] ");
+        parser.Variables.add(idc4); 
+
+        Nodo tmp = new Nodo("TEXTO");
+        tmp.setIdNod(parser.contador++);
+        tmp.setValor(txt4);
+        RESULT=tmp;
+    :}
 ;
 
 EXPRE_CADENA::=     
@@ -370,7 +381,28 @@ EXPRE_CADENA::=
 ;
 
 SENTENCIA_BOOLEANA ::= 
-        Bool:b1 Identificador:id P_coma 
+        Op_Booleano:opb1 
+    {:
+        parser.Simbolo.add(opb1);
+       
+        Nodo tmp = new Nodo("BOOLEAN");
+        tmp.setIdNod(parser.contador++);
+        tmp.setValor(opb1);
+        RESULT=tmp;
+    :} 
+    |   Op_Booleano:opb1 Op_Relacional:opr1 Op_Booleano:opb2
+    {:
+        parser.Simbolo.add(opb1);
+        parser.Simbolo.add(opr1);
+        parser.Simbolo.add(opb2);
+       
+        Nodo tmp = new Nodo("BOOLEAN");
+        tmp.setIdNod(parser.contador++);
+        tmp.setValor(opb1);
+        tmp.setValor(opb2);
+        RESULT=tmp;
+    :}
+    |   Bool:b1 Identificador:id P_coma 
     {:
         parser.Simbolo.add(b1); 
         parser.Variables.add(id); 

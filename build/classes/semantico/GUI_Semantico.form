@@ -130,7 +130,7 @@
           <Properties>
             <Property name="columns" type="int" value="20"/>
             <Property name="rows" type="int" value="5"/>
-            <Property name="text" type="java.lang.String" value="public void main(&quot;expresion&quot;){&#xa;String s=&quot;ejemplo&quot;;&#xa;for(int i=0; i&lt;=0; i++){&#xa;if(a==b){&#xa;int z=0;&#xa;}&#xa;}&#xa;}"/>
+            <Property name="text" type="java.lang.String" value="public void main(String[] args){&#xa;     String s=&quot;ejemplo&quot;;&#xa;     for(Int i=0;  i &lt;= 0;  i++){&#xa;            if(true != false){&#xa;               Int sum += 0;&#xa;            }&#xa;     }&#xa;}"/>
           </Properties>
         </Component>
       </SubComponents>

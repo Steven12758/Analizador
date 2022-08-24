@@ -1,5 +1,0 @@
-digraph G {node[shape=ellipse, style=filled, color=salmon]; edge[color=black];rankdir=UD 
-
-"10.INICIO=null"->"9.SENTENCIA= Sentencia ""9.SENTENCIA= Sentencia "->"8.OPERADOR ACCESO= operador acceso ""8.OPERADOR ACCESO= operador acceso "->"4.Simbolo= ( ""8.OPERADOR ACCESO= operador acceso "->"2.Palabra Reservada= void ""8.OPERADOR ACCESO= operador acceso "->"3.Palabra Reservada= main ""8.OPERADOR ACCESO= operador acceso "->"0.TEXTO=expresion""8.OPERADOR ACCESO= operador acceso "->"5.Simbolo= ) ""8.OPERADOR ACCESO= operador acceso "->"6.Simbolo= { ""8.OPERADOR ACCESO= operador acceso "->"7.Simbolo= } "
-
-}

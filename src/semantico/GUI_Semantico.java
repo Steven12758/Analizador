@@ -84,7 +84,7 @@ public class GUI_Semantico extends javax.swing.JFrame {
 
         txtInput.setColumns(20);
         txtInput.setRows(5);
-        txtInput.setText("public void main(\"expresion\"){\nString s=\"ejemplo\";\nfor(int i=0; i<=0; i++){\nif(a==b){\nint z=0;\n}\n}\n}");
+        txtInput.setText("public void main(String[] args){\n     String s=\"ejemplo\";\n     for(Int i=0;  i <= 0;  i++){\n            if(true != false){\n               Int sum += 0;\n            }\n     }\n}");
         jScrollPane1.setViewportView(txtInput);
 
         jLabel2.setFont(new java.awt.Font("Comic Sans MS", 0, 24)); // NOI18N
@@ -329,7 +329,6 @@ public class GUI_Semantico extends javax.swing.JFrame {
             simbolos[4] = ts[i][4]; //numero
             simbolos[5] = ts[i][5]; //simbolo
             simbolos[6] = ts[i][6]; //tipo
-            System.out.println("ss");
             tsintactico.addRow(simbolos);
         }
     }
@@ -340,7 +339,9 @@ public class GUI_Semantico extends javax.swing.JFrame {
         for (Nodo hijos : raiz.getHijos()) {
             cuerpo += "\"" + raiz.getIdNod() + "." + raiz.getEtiqueta() + "=" + raiz.getValor() + "\"->\"" + hijos.getIdNod() + "." + hijos.getEtiqueta() + "=" + hijos.getValor() + "\"";
             cuerpo += recorrido(hijos);
+            System.out.println("Arbol: " + cuerpo);
         }
+
         return cuerpo;
     }
 
@@ -348,12 +349,11 @@ public class GUI_Semantico extends javax.swing.JFrame {
     public void graficar(Nodo raiz) {
         String cadena = recorrido(raiz);
         try {
-            try ( FileWriter archivo = new FileWriter("src/semantico/arbol.dot")) {
-                PrintWriter pw = new PrintWriter(archivo);
-                pw.println("digraph G {node[shape=ellipse, style=filled, color=salmon]; edge[color=black];rankdir=UD \n");
-                pw.println(cadena);
-                pw.println("\n}");
-            }
+            FileWriter archivo = new FileWriter("src/semantico/arbol.dot");
+            PrintWriter pw = new PrintWriter(archivo);
+            pw.println("digraph G {node[shape=ellipse, style=filled, color=salmon]; edge[color=black];rankdir=UD \n");
+            pw.println(cadena);
+            pw.println("\n}");
             System.out.println("Arbol Generado con exito");
         } catch (IOException e) {
             System.out.println(e + " 1");
@@ -537,7 +537,7 @@ public class GUI_Semantico extends javax.swing.JFrame {
             Nodo raiz = parser.padre;
             String resultado = recorrido(raiz);
             System.out.println("Resultados: " + resultado);
-            graficar(raiz); 
+            graficar(raiz);
         } catch (Exception e) {
             System.out.println("NO SE HA PODIDO GENERAR EL ARBOL " + e);
         }
