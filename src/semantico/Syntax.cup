@@ -123,15 +123,15 @@ SENTENCIA ::=
         parser.Simbolo.add(" { ");
         parser.Simbolo.add(" } ");
 
-        Nodo nd = new Nodo("OPERADOR ACCESO");
-        nd.setValor(" operador acceso ");
+        Nodo nd = new Nodo("MAIN");
+        nd.setValor(main);
        
         Nodo nv = new Nodo("Palabra Reservada");
-        nv.setValor(" void ");
+        nv.setValor(rvoid);
         nv.setIdNod(parser.contador++);
 
-        Nodo nm = new Nodo("Palabra Reservada");
-        nm.setValor(" main ");
+        Nodo nm = new Nodo("OACCESO");
+        nm.setValor(apublic);
         nm.setIdNod(parser.contador++);
 
         Nodo para = new Nodo("Simbolo");
@@ -150,16 +150,18 @@ SENTENCIA ::=
         sim2.setValor(" } ");
         sim2.setIdNod(parser.contador++);
 
-        nd.AddHijos((Nodo) para);
-        nd.AddHijos((Nodo) nv);
         nd.AddHijos((Nodo) nm);
+        nd.AddHijos((Nodo) nv);
+        nd.AddHijos((Nodo) para);
+        nd.AddHijos((Nodo) nd1);
         nd.AddHijos((Nodo) parc);
         nd.AddHijos((Nodo) sim);
+        nd.AddHijos((Nodo) nd2);
         nd.AddHijos((Nodo) sim2);
-
         nd.setIdNod(parser.contador++);
+
         RESULT=nd;
-    :}  | error
+    :}  | ERROR_IDENTIFICADOR | ERROR_LITERAL
 ;
 
 INSTRUCCION ::= 
@@ -480,7 +482,7 @@ IF ::=
 ;
 
 IF_ELSE ::= 
-        If:sim Parentesis_a SENTENCIA_BOOLEANA:logica Parentesis_c Llave_a INSTRUCCION:nd1 Llave_c Else Llave_a INSTRUCCION:nd2 Llave_c
+        If:sim Parentesis_a SENTENCIA_BOOLEANA:logica Parentesis_c Llave_a INSTRUCCION:nd1 Llave_c Else:prc Llave_a INSTRUCCION:nd2 Llave_c
     {:
         parser.PalabraReservada.add(sim); 
         parser.Simbolo.add(" ( "); 
@@ -491,9 +493,9 @@ IF_ELSE ::=
         Nodo nd = new Nodo("CONDICIONAL_SI_NO");
         nd.setValor(" if ");
 
-        Nodo para = new Nodo("Simbolo");
-        para.setValor(" ( ");
-        para.setIdNod(parser.contador++);
+        Nodo smpara = new Nodo("Simbolo");
+        smpara.setValor(" ( ");
+        smpara.setIdNod(parser.contador++);
 
         Nodo parc = new Nodo("Simbolo");
         parc.setValor(" ) ");
@@ -507,7 +509,7 @@ IF_ELSE ::=
         llc.setValor(" } ");
         llc.setIdNod(parser.contador++);
 
-        nd.AddHijos((Nodo) para);
+        nd.AddHijos((Nodo) smpara);
         nd.AddHijos((Nodo) logica);
         nd.AddHijos((Nodo) parc);
         nd.AddHijos((Nodo) lla);
@@ -518,17 +520,9 @@ IF_ELSE ::=
         ndE.setValor(" else ");
         nd.AddHijos((Nodo) ndE);
 
-        Nodo lla2 = new Nodo("Simbolo");
-        lla2.setValor(" { ");
-        lla2.setIdNod(parser.contador++);
-
-        Nodo llc2 = new Nodo("Simbolo");
-        llc2.setValor(" } ");
-        llc2.setIdNod(parser.contador++);
-
-        ndE.AddHijos((Nodo) lla2);
+        ndE.AddHijos((Nodo) lla);
         ndE.AddHijos((Nodo) nd2);
-        ndE.AddHijos((Nodo) llc2);
+        ndE.AddHijos((Nodo) llc);
 
         ndE.setIdNod(parser.contador++);
         nd.setIdNod(parser.contador++);
@@ -542,12 +536,11 @@ WHILE ::=
  	parser.PalabraReservada.add(mientras); 
         parser.Simbolo.add(" ( "); 
         parser.Simbolo.add(" ) "); 
-        parser.Simbolo.add(" ; "); 
         parser.Simbolo.add(" { "); 
         parser.Simbolo.add(" } ");
 
         Nodo nd = new Nodo("CICLO");
-        nd.setValor(" while ");
+        nd.setValor(mientras);
 
         Nodo para = new Nodo("Simbolo");
         para.setValor(" ( ");
@@ -619,7 +612,7 @@ FOR ::=
 ;
     
 SENTENCIA_FOR ::=
-    T_Dato Identificador Igual entero P_coma SENTENCIA_BOOLEANA P_coma DECLARACION_FOR 
+        T_Dato:dato Identificador:id Igual entero:num P_coma SENTENCIA_BOOLEANA:idbool P_coma DECLARACION_FOR:decfor
 ;
 
 DECLARACION_FOR ::= 
@@ -628,7 +621,7 @@ DECLARACION_FOR ::=
         parser.Variables.add(id1); 
         parser.Simbolo.add(op1);
 
-        Nodo tmp = new Nodo("CICLO");
+        Nodo tmp = new Nodo("DECLARACION FOR");
         tmp.setIdNod(parser.contador++);
         tmp.setValor(id1);
         RESULT=tmp;

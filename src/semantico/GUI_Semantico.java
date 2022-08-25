@@ -341,7 +341,6 @@ public class GUI_Semantico extends javax.swing.JFrame {
             cuerpo += recorrido(hijos);
             System.out.println("Arbol: " + cuerpo);
         }
-
         return cuerpo;
     }
 
