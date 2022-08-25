@@ -344,7 +344,10 @@ public class GUI_Semantico extends javax.swing.JFrame {
         return cuerpo;
     }
 
-    //TRADUCIR A GRAPHVIZ
+    /*
+    *TRADUCIR A GRAPHVIZ 
+    * Agregar liberia GRAPHVIZ
+    */
     public void graficar(Nodo raiz) {
         String cadena = recorrido(raiz);
         try {
