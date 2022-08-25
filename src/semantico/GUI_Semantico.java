@@ -361,7 +361,8 @@ public class GUI_Semantico extends javax.swing.JFrame {
             System.out.println(e + " 1");
         }
         try {
-            String dotPath = "/usr/bin/dot"; //RUTA DE GRAPHVIZ
+            /*Ruta de paquete GRAPHVIZ*/
+            String dotPath = "/usr/bin/dot"; 
             String cmd = dotPath + " -Tpng src/semantico/arbol.dot -o src/semantico/arbol.png";
             Runtime.getRuntime().exec(cmd);
         } catch (IOException ioe) {
