@@ -1,6 +1,8 @@
 package semantico;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  *
@@ -9,9 +11,29 @@ import java.io.File;
 public class main {
 
     public static void main(String[] args) {
+        
+        Path pathAbsolute = Paths.get("");
+	String directoryName = pathAbsolute.toAbsolutePath().toString();
+        String path = "";
+        String pathParser = "";
+        String os = System.getProperty("os.name").toLowerCase();
+        
+        if (os.contains("win")) {
+            //Windows
+            path = "src\\semantico\\";
+            pathParser = "src\\semantico";
+            directoryName+="\\";
+        }else{
+            //Linux
+            path = "src/semantico/";
+            pathParser = "src/semantico";
+            directoryName+="/";
+        }
+ 
+	
         /*Generar Lexico*/
-        String path = "src/semantico/Lexer.flex";
-        generarLexer(path);
+        System.out.println("Current Working Directory is = " +directoryName+path);
+        generarLexer(directoryName+path+"Lexer.flex");
         
         /*Generar Sintactico*/
         String opciones[] = new String[7];
@@ -20,7 +42,7 @@ public class main {
         opciones[0] = "-destdir";
 
         //Le damos la dirección, carpeta donde se va a generar el parser.java & el simbolosxxx.java
-        opciones[1] = "src/semantico";
+        opciones[1] = pathParser;
 
         //Seleccionamos la opción de nombre de archivo simbolos
         opciones[2] = "-symbols";
@@ -35,7 +57,7 @@ public class main {
         opciones[5] = "parser";
 
         //Le decimos donde se encuentra el archivo .cup 
-        opciones[6] = "src/semantico/Syntax.cup";
+        opciones[6] = path+"Syntax.cup";
         try {
             java_cup.Main.main(opciones);
         } catch (Exception ex) {

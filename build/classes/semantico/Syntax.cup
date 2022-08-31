@@ -165,20 +165,154 @@ SENTENCIA ::=
 ;
 
 INSTRUCCION ::= 
-    INSTRUCCION DECLARACION |
-    DECLARACION |
-    INSTRUCCION IF | 
-    IF |
-    INSTRUCCION IF_ELSE |
-    IF_ELSE |
-    INSTRUCCION WHILE |
-    WHILE |
-    INSTRUCCION DO_WHILE
-    DO_WHILE |
-    INSTRUCCION FOR |
-    FOR |
-    DECLARACION_FOR| 
-    SENTENCIA_BOOLEANA
+  INSTRUCCION:ins DECLARACION:i1
+    {:
+        Nodo tmp = new Nodo("INSTRUCCION + DECLARACION");
+        tmp.setValor(" Lista de Instrucciones ");
+        tmp.setIdNod(parser.contador++);
+        tmp.AddHijos((Nodo) ins);
+        tmp.AddHijos((Nodo) i1);
+
+        System.out.println("NODOS Raiz agregado tmp: "+tmp.Etiqueta);
+        RESULT=tmp;
+    :}
+| DECLARACION:i2
+    {:
+        Nodo tmp = new Nodo("DECLARACION");
+        tmp.setValor(" Declaracion ");
+        tmp.setIdNod(parser.contador++);
+        tmp.AddHijos((Nodo) i2);
+
+        System.out.println("NODOS Raiz agregado tmp: " +tmp.Etiqueta);
+
+        RESULT=tmp;
+    :}
+| INSTRUCCION:ins IF:i3
+    {:
+        Nodo tmp = new Nodo("INSTRUCCION + IF");
+        tmp.setValor(" Lista de Instrucciones ");
+        tmp.setIdNod(parser.contador++);
+        tmp.AddHijos((Nodo) ins);
+        tmp.AddHijos((Nodo) i3);
+
+        System.out.println("NODOS Raiz agregado tmp: "+tmp.Etiqueta);
+        RESULT=tmp;
+    :} 
+| IF:i4
+    {:
+        Nodo tmp = new Nodo("IF");
+        tmp.setValor(" if ");
+        tmp.setIdNod(parser.contador++);
+        tmp.AddHijos((Nodo) i4);
+
+        System.out.println("NODOS Raiz agregado tmp: " +tmp.Etiqueta);
+
+        RESULT=tmp;
+    :}
+| INSTRUCCION:ins IF_ELSE:i5
+    {:
+        Nodo tmp = new Nodo("INSTRUCCION + IF_ELSE");
+        tmp.setValor(" Lista de Instrucciones ");
+        tmp.setIdNod(parser.contador++);
+        tmp.AddHijos((Nodo) ins);
+        tmp.AddHijos((Nodo) i5);
+
+        System.out.println("NODOS Raiz agregado tmp: "+tmp.Etiqueta);
+        RESULT=tmp;
+    :}
+| IF_ELSE:i6
+    {:
+        Nodo tmp = new Nodo("IF_ELSE");
+        tmp.setValor(" if_else ");
+        tmp.setIdNod(parser.contador++);
+        tmp.AddHijos((Nodo) i6);
+
+        System.out.println("NODOS Raiz agregado tmp: " +tmp.Etiqueta);
+        RESULT=tmp;
+    :}
+| INSTRUCCION:ins WHILE:i6
+    {:
+        Nodo tmp = new Nodo("INSTRUCCION + WHILE");
+        tmp.setValor(" Lista de Instrucciones ");
+        tmp.setIdNod(parser.contador++);
+        tmp.AddHijos((Nodo) ins);
+        tmp.AddHijos((Nodo) i6);
+
+        System.out.println("NODOS Raiz agregado tmp: "+tmp.Etiqueta);
+        RESULT=tmp;
+    :}
+| WHILE:i7
+    {:
+        Nodo tmp = new Nodo("WHILE");
+        tmp.setValor(" while ");
+        tmp.setIdNod(parser.contador++);
+        tmp.AddHijos((Nodo) i7);
+
+        System.out.println("NODOS Raiz agregado tmp: " +tmp.Etiqueta);
+        RESULT=tmp;
+    :}
+| INSTRUCCION:ins DO_WHILE:i8
+    {:
+        Nodo tmp = new Nodo("INSTRUCCION + DO_WHILE");
+        tmp.setValor(" Lista de Instrucciones ");
+        tmp.setIdNod(parser.contador++);
+        tmp.AddHijos((Nodo) ins);
+        tmp.AddHijos((Nodo) i8);
+
+        System.out.println("NODOS Raiz agregado tmp: "+tmp.Etiqueta);
+        RESULT=tmp;
+    :}
+| DO_WHILE:i9
+    {:
+        Nodo tmp = new Nodo("DO_WHILE");
+        tmp.setValor(" do while ");
+        tmp.setIdNod(parser.contador++);
+        tmp.AddHijos((Nodo) i9);
+
+        System.out.println("NODOS Raiz agregado tmp: " +tmp.Etiqueta);
+        RESULT=tmp;
+    :}
+| INSTRUCCION:ins FOR:i10
+    {:
+        Nodo tmp = new Nodo("INSTRUCCION + FOR");
+        tmp.setValor(" Lista de Instrucciones ");
+        tmp.setIdNod(parser.contador++);
+        tmp.AddHijos((Nodo) ins);
+        tmp.AddHijos((Nodo) i10);
+
+        System.out.println("NODOS Raiz agregado tmp: "+tmp.Etiqueta);
+        RESULT=tmp;
+    :} 
+| FOR:i11
+    {:
+        Nodo tmp = new Nodo("FOR");
+        tmp.setValor(" for ");
+        tmp.setIdNod(parser.contador++);
+        tmp.AddHijos((Nodo) i11);
+
+        System.out.println("NODOS Raiz agregado tmp: " +tmp.Etiqueta);
+        RESULT=tmp;
+    :}
+| DECLARACION_FOR:i12
+    {:
+        Nodo tmp = new Nodo("DECLARACION FOR");
+        tmp.setValor(" Declaracion for ");
+        tmp.setIdNod(parser.contador++);
+        tmp.AddHijos((Nodo) i12);
+
+        System.out.println("NODOS Raiz agregado tmp: " +tmp.Etiqueta);
+        RESULT=tmp;
+    :}
+| SENTENCIA_BOOLEANA:i13
+    {:
+        Nodo tmp = new Nodo("SENTENCIA_BOOLEANA");
+        tmp.setValor(" Sentencia Booleana ");
+        tmp.setIdNod(parser.contador++);
+        tmp.AddHijos((Nodo) i13);
+
+        System.out.println("NODOS Raiz agregado tmp: " +tmp.Etiqueta);
+        RESULT=tmp;
+    :}
 ;
 
 DECLARACION ::= 
@@ -434,9 +568,9 @@ SENTENCIA_BOOLEANA ::=
         parser.Simbolo.add(opr); 
         parser.ValoresNumericos.add(num); 
        
-        Nodo tmp = new Nodo("BOOLEAN");
+        Nodo tmp = new Nodo("CONDICION DE TERMINACION");
         tmp.setIdNod(parser.contador++);
-        tmp.setValor(opr);
+        tmp.setValor(id3+opr+num);
         RESULT=tmp;
     :}
 ;
@@ -613,6 +747,53 @@ FOR ::=
     
 SENTENCIA_FOR ::=
         T_Dato:dato Identificador:id Igual entero:num P_coma SENTENCIA_BOOLEANA:idbool P_coma DECLARACION_FOR:decfor
+    {:
+        parser.PalabraReservada.add(dato);
+        parser.Variables.add(id); 
+        parser.Simbolo.add(" = "); 
+        parser.ValoresNumericos.add(num);
+        parser.Simbolo.add(" ; ");
+        
+        Nodo nd = new Nodo("Sentencia en For ");
+        nd.setValor(" Condicion ciclo for ");
+
+        Nodo tipo_dato = new Nodo("Palabra Reservada");
+        tipo_dato.setValor(dato);
+        tipo_dato.setIdNod(parser.contador++);
+
+        Nodo var_identificador = new Nodo("Identificador");
+        var_identificador.setValor(id);
+        var_identificador.setIdNod(parser.contador++);
+
+        Nodo igual = new Nodo("Simbolo");
+        igual.setValor(" = ");
+        igual.setIdNod(parser.contador++);
+
+        Nodo valor_numerico = new Nodo("ValoresNumericos");
+        valor_numerico.setValor(num);
+        valor_numerico.setIdNod(parser.contador++);
+        
+        Nodo punto_coma = new Nodo("Simbolo");
+        punto_coma.setValor(" ; ");
+        punto_coma.setIdNod(parser.contador++);
+        
+        Nodo punto_coma2 = new Nodo("Simbolo");
+        punto_coma2.setValor(" ; ");
+        punto_coma2.setIdNod(parser.contador++);
+
+        nd.AddHijos((Nodo) tipo_dato);
+        nd.AddHijos((Nodo) var_identificador);
+        nd.AddHijos((Nodo) igual);
+        nd.AddHijos((Nodo) valor_numerico);
+        nd.AddHijos((Nodo) punto_coma);
+        nd.AddHijos((Nodo) idbool);
+        nd.AddHijos((Nodo) punto_coma2);
+        nd.AddHijos((Nodo) decfor);
+        
+        nd.setIdNod(parser.contador++);
+        RESULT = nd;
+
+    :}
 ;
 
 DECLARACION_FOR ::= 
@@ -621,9 +802,9 @@ DECLARACION_FOR ::=
         parser.Variables.add(id1); 
         parser.Simbolo.add(op1);
 
-        Nodo tmp = new Nodo("DECLARACION FOR");
+        Nodo tmp = new Nodo("INCREMENTO");
         tmp.setIdNod(parser.contador++);
-        tmp.setValor(id1);
+        tmp.setValor(id1+op1+op1);
         RESULT=tmp;
     :}
 ;

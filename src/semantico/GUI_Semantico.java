@@ -8,6 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashSet;
 import java_cup.runtime.Scanner;
 import javax.swing.JOptionPane;
@@ -335,11 +337,10 @@ public class GUI_Semantico extends javax.swing.JFrame {
 
     //RECORRER ARBOL
     public static String recorrido(Nodo raiz) {
-        String cuerpo = "";
+        String cuerpo = "";        
         for (Nodo hijos : raiz.getHijos()) {
-            cuerpo += "\"" + raiz.getIdNod() + "." + raiz.getEtiqueta() + "=" + raiz.getValor() + "\"->\"" + hijos.getIdNod() + "." + hijos.getEtiqueta() + "=" + hijos.getValor() + "\"";
+            cuerpo += "\"" + raiz.getIdNod() + "." + raiz.getEtiqueta() + "=" + raiz.getValor() + "\"->\"" + hijos.getIdNod() + "." + hijos.getEtiqueta() + "=" + hijos.getValor() + "\"";   
             cuerpo += recorrido(hijos);
-            System.out.println("Arbol: " + cuerpo);
         }
         return cuerpo;
     }
@@ -349,22 +350,50 @@ public class GUI_Semantico extends javax.swing.JFrame {
     * Agregar liberia GRAPHVIZ
     */
     public void graficar(Nodo raiz) {
+        Path path = Paths.get("");
+	String directoryName = path.toAbsolutePath().toString();
+        String os = System.getProperty("os.name").toLowerCase();
+        String pathFile = "";
+        String cmd = "";
+            
         String cadena = recorrido(raiz);
+        FileWriter archivo = null;
+        PrintWriter pw = null;
+        
         try {
-            FileWriter archivo = new FileWriter("src/semantico/arbol.dot");
-            PrintWriter pw = new PrintWriter(archivo);
+            
+            if (os.contains("win")) {
+                //Windows
+                pathFile = "src\\semantico\\arbol.dot";
+                directoryName+="\\";
+                cmd = "dot -Tpng src\\semantico\\arbol.dot -o src\\semantico\\arbol.png";
+            }else{
+                //Linux
+                pathFile = "src/semantico/arbol.dot";
+                directoryName+="/";
+                cmd = "/usr/bin/dot -Tpng src/semantico/arbol.dot -o src/semantico/arbol.png";
+            }
+            
+            archivo = new FileWriter(directoryName+pathFile);
+            pw = new PrintWriter(archivo);
             pw.println("digraph G {node[shape=ellipse, style=filled, color=salmon]; edge[color=black];rankdir=UD \n");
             pw.println(cadena);
             pw.println("\n}");
             System.out.println("Arbol Generado con exito");
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println(e + " 1");
+        } finally {
+           try {
+           if (null != archivo)
+              archivo.close();
+           } catch (Exception e2) {
+              e2.printStackTrace();
+           }
         }
         try {
             /*Ruta de paquete GRAPHVIZ*/
-            String dotPath = "/usr/bin/dot"; 
-            String cmd = dotPath + " -Tpng src/semantico/arbol.dot -o src/semantico/arbol.png";
             Runtime.getRuntime().exec(cmd);
+            System.out.println("Comando Ejecutado con exito");
         } catch (IOException ioe) {
             System.out.println(ioe + " 2");
         }
